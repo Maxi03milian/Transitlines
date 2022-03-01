@@ -38,7 +38,11 @@ export default {
       let params = "query=" + text;
       fetch("http://transport.opendata.ch/v1/locations?" + params)
         .then((res) => res.json())
-        .then((data) => this.$store.commit("updateStations", data));
+        .then((data) => {
+          console.log(data);
+          this.$store.commit("updateStations", data);
+        }
+        )
     },
   },
 };

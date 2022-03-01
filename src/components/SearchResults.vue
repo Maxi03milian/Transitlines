@@ -1,7 +1,8 @@
 <template>
   <div>
       <div v-for="station in stations" :key="station.id" class="stationItem">
-          <p>{{station.name}}</p>
+          <div class="itemText"> {{station.name}}
+          </div>
       </div>
 
   </div>
@@ -26,6 +27,14 @@ export default {
 <style>
 
 .stationItem{
-    border: 2px solid black;
+    display: flex;
+    align-items: center;
+    border: 1px solid rgb(58, 58, 58);
+    border-radius: 5px;
+    height: 60px;
+}
+
+.itemText{
+    margin: 5px;
 }
 </style>
