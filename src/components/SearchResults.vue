@@ -54,7 +54,7 @@
                 v-for="connection in getStationBoard.stationboard"
                 :key="connection.name"
               >
-                {{ connection.category }}{{ connection.number }}
+                {{ connection.category }} {{ connection.number }}
               </li>
             </ul>
           </div>
