@@ -5,7 +5,7 @@
         v-for="station in stations"
         :key="station.id"
         class="stationItem"
-        @click="open(station.name)"
+        @click="open(station.name, $event)"
       >
         <v-expansion-panel-header>
           <div class="headerContent">
@@ -83,11 +83,9 @@ export default {
     },
   },
   methods: {
-    open(text) {
+    open(text, el) {
       if (
-        document
-          .getElementsByClassName("v-expansion-panel-header")[0]
-          .classList.contains("v-expansion-panel-header--active")
+        el.target.classList.contains("v-expansion-panel-header--active")
       )
         return;
       var today = new Date();
@@ -105,6 +103,7 @@ export default {
         .then((res) => res.json())
         .then((data) => {
           this.stationBoard = data;
+          console.log(data);
         });
     },
   },
