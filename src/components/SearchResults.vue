@@ -10,30 +10,7 @@
         <v-expansion-panel-header>
           <div class="headerContent">
             <div class="icons">
-              <font-awesome-icon
-                v-if="station.icon == 'train'"
-                icon="fa-solid fa-train-subway"
-                size="2x"
-                class="customIcons"
-              />
-              <font-awesome-icon
-                v-if="station.icon == 'bus'"
-                icon="fa-solid fa-bus"
-                size="2x"
-                class="customIcons"
-              />
-              <font-awesome-icon
-                v-if="station.icon == 'tram'"
-                icon="fa-solid fa-train-tram"
-                size="2x"
-                class="customIcons"
-              />
-              <font-awesome-icon
-                v-if="station.icon == null"
-                icon="fa-solid fa-circle-question"
-                size="2x"
-                class="customIcons"
-              />
+              <FlexibleIcon :station="station" />
             </div>
             <div class="itemText">
               {{ station.name }}
@@ -49,14 +26,29 @@
           </div>
           Upcoming Connections:
           <div v-if="getStationBoard != null" class="stationStationboard">
-            <ul>
+            <v-expansion-panels>
+              <v-expansion-panel
+                v-for="connection in getStationBoard.stationboard"
+                :key="connection.name"
+              >
+                <v-expansion-panel-header>
+                  {{ connection.category }} {{ connection.number }} -->
+                  {{ connection.to }}
+                </v-expansion-panel-header>
+                <v-expansion-panel-content>
+                  <TransportDetail :transport="connection" />
+                </v-expansion-panel-content>
+              </v-expansion-panel>
+            </v-expansion-panels>
+
+            <!--             <ul>
               <li
                 v-for="connection in getStationBoard.stationboard"
                 :key="connection.name"
               >
                 {{ connection.category }} {{ connection.number }}
               </li>
-            </ul>
+            </ul> -->
           </div>
         </v-expansion-panel-content>
       </v-expansion-panel>
@@ -65,6 +57,8 @@
 </template>
 
 <script>
+import FlexibleIcon from "../components/FlexibleIcon";
+import TransportDetail from "../components/TransportDetail";
 
 export default {
   name: "SearchResults",
@@ -76,7 +70,10 @@ export default {
   props: {
     stations: Array,
   },
-  components: {},
+  components: {
+    FlexibleIcon,
+    TransportDetail,
+  },
   computed: {
     getStationBoard() {
       return this.stationBoard;
@@ -84,9 +81,7 @@ export default {
   },
   methods: {
     open(text, el) {
-      if (
-        el.target.classList.contains("v-expansion-panel-header--active")
-      )
+      if (el.target.classList.contains("v-expansion-panel-header--active"))
         return;
       var today = new Date();
       var date =
@@ -127,5 +122,4 @@ export default {
 
 .stationStationboard {
 }
-
 </style>
