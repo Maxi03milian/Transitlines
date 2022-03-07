@@ -25,6 +25,12 @@
             <span v-if="station.icon == null">Type: Unkown</span>
           </div>
           Upcoming Connections:
+          <div class="loadingSpinner" v-if="getStationBoard == null">
+            <v-progress-circular
+              indeterminate
+              color="grey"
+            ></v-progress-circular>
+          </div>
           <div v-if="getStationBoard != null" class="stationStationboard">
             <v-expansion-panels>
               <v-expansion-panel
@@ -81,6 +87,7 @@ export default {
   },
   methods: {
     open(text, el) {
+      this.stationBoard = null;
       if (el.target.classList.contains("v-expansion-panel-header--active"))
         return;
       var today = new Date();
@@ -121,5 +128,13 @@ export default {
 }
 
 .stationStationboard {
+}
+
+.loadingSpinner {
+  display: flex;
+  justify-content: center;
+}
+.v-progress-circular {
+  text-align: center;
 }
 </style>
