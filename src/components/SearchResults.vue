@@ -37,9 +37,12 @@
                 v-for="connection in getStationBoard.stationboard"
                 :key="connection.name"
               >
-                <v-expansion-panel-header>
+                <v-expansion-panel-header class="trainItem">
                   {{ connection.category }} {{ connection.number }} -->
+
                   {{ connection.to }}
+                  <span class="trainTime">{{ connection.stop.departure.substr(11, 5) }}</span>
+            
                 </v-expansion-panel-header>
                 <v-expansion-panel-content>
                   <TransportDetail :transport="connection" />
@@ -137,4 +140,8 @@ export default {
 .v-progress-circular {
   text-align: center;
 }
+.trainTime{
+  text-align: right;
+}
+
 </style>
