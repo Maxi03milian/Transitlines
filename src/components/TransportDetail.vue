@@ -1,8 +1,8 @@
 <template>
   <div>
     <v-timeline align-top dense>
-      <v-timeline-item small color="green">{{ transport.stop.station.name }}<br />Platform: {{transport.stop.platform}}<br />{{ getProperTime() }}</v-timeline-item>
-      <v-timeline-item small color="grey" v-for="stop in filteredArray" :key="stop.station.id"> {{ stop.station.name }}</v-timeline-item>
+      <v-timeline-item small color="green"><b>{{ transport.stop.station.name }}</b><br />Platform: {{transport.stop.platform}}<br />{{ getProperTime() }}</v-timeline-item>
+      <v-timeline-item small color="grey" v-for="stop in filteredArray" :key="stop.station.id"> <b>{{ stop.station.name }}</b></v-timeline-item>
     </v-timeline>
   </div>
 </template>
