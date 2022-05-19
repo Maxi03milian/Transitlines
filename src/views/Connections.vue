@@ -3,22 +3,24 @@
     <Header />
     <div class="input">
       <v-autocomplete
-        v-model="input1"
-        :items="fromStations.stations"
+        @input.native="fromOptions"
+        :items="state.fromStations.stations"
         dense
         label="From"
       ></v-autocomplete>
       <v-autocomplete
-        v-model="this.input2"
-        :items="this.toStations.stations"
-        @change="toOptions(this.input2)"
+        v-model="state.toSearchInput"
+        :items="state.toStations.stations"
         dense
         label="To"
       ></v-autocomplete>
-      <v-btn class="myButton" elevation="2" @click="fromOptions(this.input1)"
+      <v-btn class="myButton" elevation="2" @click="fromOptions(state.fromSearchInput)"
         >Go!</v-btn
       >
+      {{state.fromSearchInput}}
+      {{state.fromStations}}
     </div>
+
   </div>
 </template>
 
@@ -28,12 +30,7 @@ import Header from "../components/Header";
 export default {
   name: "Stationboard",
   data() {
-    return {
-      input1: "",
-      input2: "",
-      fromStations: [],
-      toStations: [],
-    };
+    return {};
   },
 
   components: {
@@ -42,11 +39,6 @@ export default {
   computed: {
     state() {
       return this.$store.state;
-    },
-  },
-  watch: {
-    input1() {
-     this.formOptions(this.input1)
     },
   },
   methods: {
@@ -59,13 +51,13 @@ export default {
           this.$store.commit("updateStations", data);
         });
     },
-    fromOptions(text) {
-      let params = "query=" + text;
+    fromOptions(e) {
+      let params = "query=" + e.target.value;
       fetch("http://transport.opendata.ch/v1/locations?" + params)
         .then((res) => res.json())
         .then((data) => {
           console.log(data);
-          this.fromStations = data;
+          this.$store.commit("updateFromStations", data);
         });
     },
     toOptions(text) {
@@ -74,7 +66,7 @@ export default {
         .then((res) => res.json())
         .then((data) => {
           console.log(data);
-          this.toStations = data;
+          this.$store.commit("updateToStations", data);
         });
     },
   },
