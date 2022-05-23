@@ -22,6 +22,10 @@
       ></v-autocomplete>
       <v-btn class="myButton" elevation="2" @click="search">Go!</v-btn>
     </div>
+    <div class="content" v-if="state.connections != null">
+      <p>hehee we got some connections</p>
+      {{ state.connections }}
+    </div>
   </div>
 </template>
 
@@ -51,7 +55,7 @@ export default {
       fetch("http://transport.opendata.ch/v1/connections?" + params)
         .then((res) => res.json())
         .then((data) => {
-          console.log(data);
+          this.$store.commit("updateConnections", data);
         });
     },
     fromOptions(e) {
