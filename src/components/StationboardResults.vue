@@ -19,10 +19,10 @@
         </v-expansion-panel-header>
         <v-expansion-panel-content>
           <div class="stationInfos">
-            <span v-if="station.icon == 'train'">Type: Train station</span>
-            <span v-if="station.icon == 'bus'">Type: Bus station</span>
-            <span v-if="station.icon == 'tram'">Type: Tram station</span>
-            <span v-if="station.icon == null">Type: Unkown</span>
+            <span v-if="station.icon == 'train'">Train station</span>
+            <span v-if="station.icon == 'bus'">Bus station</span>
+            <span v-if="station.icon == 'tram'">Tram station</span>
+            <span v-if="station.icon == null">Unkown station type</span>
           </div>
           Upcoming Connections:
           <div class="loadingSpinner" v-if="getStationBoard == null">
@@ -70,7 +70,7 @@ import FlexibleIcon from "../components/FlexibleIcon";
 import TransportDetail from "../components/TransportDetail";
 
 export default {
-  name: "SearchResults",
+  name: "StationboardResults",
   data() {
     return {
       stationBoard: null,

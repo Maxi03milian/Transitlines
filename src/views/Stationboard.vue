@@ -12,21 +12,21 @@
       <v-btn class="myButton" elevation="2" @click="search(state.searchInput)">Go!</v-btn>
     </div>
     <div class="content" v-if="state.stations != null">
-      <SearchResults :stations="state.stations.stations"/>
+      <StationboardResults :stations="state.stations.stations"/>
     </div>
   </div>
 </template>
 
 <script>
 import Header from "../components/Header";
-import SearchResults from "../components/SearchResults";
+import StationboardResults from "../components/StationboardResults";
 
 export default {
-  name: "Stationboard",
+  name: "Home",
 
   components: {
     Header,
-    SearchResults,
+    StationboardResults,
   },
   computed: {
     state() {

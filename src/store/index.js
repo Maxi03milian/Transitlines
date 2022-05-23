@@ -7,8 +7,8 @@ export default new Vuex.Store({
   state: {
     stations: null,
     searchInput: "",
-    fromStations: [],
-    toStations: [],
+    fromStations: {},
+    toStations: {},
   },
   mutations: {
     updateStations (state, val){
