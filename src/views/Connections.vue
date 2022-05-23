@@ -3,6 +3,7 @@
     <Header />
     <div class="input">
       <v-autocomplete
+        id="input1"
         @input.native="fromOptions"
         :items="state.fromStations.stations"
         item-text="name"
@@ -11,6 +12,7 @@
         label="From"
       ></v-autocomplete><br>
       <v-autocomplete
+        id="input2"
         @input.native="toOptions"
         :items="state.toStations.stations"
         item-text="name"
@@ -18,7 +20,7 @@
         dense
         label="To"
       ></v-autocomplete>
-      <v-btn class="myButton" elevation="2">Go!</v-btn>
+      <v-btn class="myButton" elevation="2" @click="search">Go!</v-btn>
     </div>
   </div>
 </template>
@@ -41,13 +43,15 @@ export default {
     },
   },
   methods: {
-    search(text) {
-      let params = "query=" + text;
-      fetch("http://transport.opendata.ch/v1/locations?" + params)
+    search() {
+      const val1 = document.querySelector('#input1').value;
+      const val2 = document.querySelector('#input2').value;
+      const params = "from=" + val1 + "&to=" + val2;
+
+      fetch("http://transport.opendata.ch/v1/connections?" + params)
         .then((res) => res.json())
         .then((data) => {
           console.log(data);
-          this.$store.commit("updateStations", data);
         });
     },
     fromOptions(e) {
@@ -55,7 +59,6 @@ export default {
       fetch("http://transport.opendata.ch/v1/locations?" + params)
         .then((res) => res.json())
         .then((data) => {
-          console.log(data);
           this.$store.commit("updateFromStations", data);
         });
     },
@@ -64,7 +67,6 @@ export default {
       fetch("http://transport.opendata.ch/v1/locations?" + params)
         .then((res) => res.json())
         .then((data) => {
-          console.log(data);
           this.$store.commit("updateToStations", data);
         });
     },
