@@ -9,12 +9,12 @@
       <Navcard
         title="Connections"
         text="Look up connections between 2 Stations"
-        link="https://google.com"
+        link="/connections"
       />
       <Navcard
         title="Stationboard"
         text="Look up all upcoming connections on a specific station"
-        link="https://youtube.com"
+        link="/stationboard"
       />
     </div>
   </div>

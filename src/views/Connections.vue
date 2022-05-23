@@ -27,14 +27,14 @@
       <v-progress-circular indeterminate color="grey"></v-progress-circular>
     </div>
     <div class="content" v-if="state.connections != null && !this.loading">
-      <p>hehee we got some connections</p>
-      {{ state.connections }}
+      <ConnectionResults :connections="state.connections"/>
     </div>
   </div>
 </template>
 
 <script>
 import Header from "../components/Header";
+import ConnectionResults from "../components/ConnectionResults";
 
 export default {
   name: "Stationboard",
@@ -46,6 +46,7 @@ export default {
 
   components: {
     Header,
+    ConnectionResults,
   },
   computed: {
     state() {
