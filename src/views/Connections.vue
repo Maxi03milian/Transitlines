@@ -10,7 +10,8 @@
         item-value="name"
         dense
         label="From"
-      ></v-autocomplete><br>
+      ></v-autocomplete
+      ><br />
       <v-autocomplete
         id="input2"
         @input.native="toOptions"
@@ -22,7 +23,10 @@
       ></v-autocomplete>
       <v-btn class="myButton" elevation="2" @click="search">Go!</v-btn>
     </div>
-    <div class="content" v-if="state.connections != null">
+    <div class="loadingSpinner" v-if="this.loading">
+      <v-progress-circular indeterminate color="grey"></v-progress-circular>
+    </div>
+    <div class="content" v-if="state.connections != null && !this.loading">
       <p>hehee we got some connections</p>
       {{ state.connections }}
     </div>
@@ -35,7 +39,9 @@ import Header from "../components/Header";
 export default {
   name: "Stationboard",
   data() {
-    return {};
+    return {
+      loading: false
+    };
   },
 
   components: {
@@ -48,14 +54,16 @@ export default {
   },
   methods: {
     search() {
-      const val1 = document.querySelector('#input1').value;
-      const val2 = document.querySelector('#input2').value;
+      const val1 = document.querySelector("#input1").value;
+      const val2 = document.querySelector("#input2").value;
       const params = "from=" + val1 + "&to=" + val2;
+      this.loading = true
 
       fetch("http://transport.opendata.ch/v1/connections?" + params)
         .then((res) => res.json())
         .then((data) => {
           this.$store.commit("updateConnections", data);
+          this.loading = false;
         });
     },
     fromOptions(e) {
@@ -79,4 +87,11 @@ export default {
 </script>
 
 <style>
+.loadingSpinner {
+  display: flex;
+  justify-content: center;
+}
+.v-progress-circular {
+  text-align: center;
+}
 </style>
