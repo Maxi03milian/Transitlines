@@ -27,7 +27,7 @@
       <v-progress-circular indeterminate color="grey"></v-progress-circular>
     </div>
     <div class="content" v-if="state.connections != null && !this.loading">
-      <ConnectionResults :connections="state.connections"/>
+      <ConnectionResults :connections="state.connections" />
     </div>
   </div>
 </template>
@@ -40,7 +40,7 @@ export default {
   name: "Stationboard",
   data() {
     return {
-      loading: false
+      loading: false,
     };
   },
 
@@ -58,7 +58,7 @@ export default {
       const val1 = document.querySelector("#input1").value;
       const val2 = document.querySelector("#input2").value;
       const params = "from=" + val1 + "&to=" + val2;
-      this.loading = true
+      this.loading = true;
 
       fetch("http://transport.opendata.ch/v1/connections?" + params)
         .then((res) => res.json())
