@@ -12,6 +12,7 @@
               <b>
                 {{ connection.products[0] }} Richtung
                 <span v-if="connection.sections[0].journey">{{ connection.sections[0].journey.to }}</span>
+                <span v-else>{{ connection.sections[1].journey.to }}</span>
               </b>
             </div>
             <div class="connectionTimeline">
