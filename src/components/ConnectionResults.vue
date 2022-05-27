@@ -9,8 +9,10 @@
         <v-expansion-panel-header>
           <div class="headerContent">
             <div class="nextConnection">
+              <b>
               {{ connection.products[0] }} Richtung
               {{ connection.sections[0].journey.to }}
+              </b>
             </div>
             <div class="connectionTimeline">
               <span class="alignCenter">{{
@@ -35,10 +37,9 @@
           </div>
         </v-expansion-panel-header>
         <v-expansion-panel-content>
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-          eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad
-          minim veniam, quis nostrud exercitation ullamco laboris nisi ut
-          aliquip ex ea commodo consequat.
+          <div v-for="section in connection.sections" :key="section">
+            This is a Connection
+          </div>
         </v-expansion-panel-content>
       </v-expansion-panel>
     </v-expansion-panels>
