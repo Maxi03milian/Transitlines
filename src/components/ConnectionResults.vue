@@ -7,11 +7,11 @@
         class="connectionCard"
       >
         <v-expansion-panel-header>
-          <div class="headerContent">
+          <div class="connectionHeaderContent">
             <div class="nextConnection">
               <b>
-              {{ connection.products[0] }} Richtung
-              {{ connection.sections[0].journey.to }}
+                {{ connection.products[0] }} Richtung
+                <span v-if="connection.sections[0].journey">{{ connection.sections[0].journey.to }}</span>
               </b>
             </div>
             <div class="connectionTimeline">
@@ -21,7 +21,12 @@
               <span class="alignCenter">
                 <v-divider></v-divider>
                 <div class="timelineDots">
-                  <v-icon small color="blue-grey darken-2" v-for="index in connection.transfers" :key="index">
+                  <v-icon
+                    small
+                    color="blue-grey darken-2"
+                    v-for="index in connection.transfers"
+                    :key="index"
+                  >
                     mdi-call-split
                   </v-icon>
                 </div>
@@ -32,13 +37,35 @@
             </div>
             <div class="connectionLength">
               <span>Platform {{ connection.from.platform }}</span>
-              <span>{{getProperLength(connection.duration)}}</span>
+              <span>{{ getProperLength(connection.duration) }}</span>
             </div>
           </div>
         </v-expansion-panel-header>
         <v-expansion-panel-content>
           <div v-for="section in connection.sections" :key="section">
-            This is a Connection
+            <v-timeline align-top dense>
+              <v-timeline-item small color="grey">
+                <b>{{ section.departure.station.name }}</b>
+                <br />
+                <div v-if="section.journey" class="journeyDetails">
+                  <span
+                    >{{ section.journey.category }}
+                    {{ section.journey.number }} Richtung
+                    {{ section.journey.to }}</span
+                  >
+                  <span
+                    >Platform: {{ section.journey.passList[0].platform }}</span
+                  >
+                  <span>{{getProperTime(section.journey.passList[0].departure)}}</span>
+                </div>
+                <div v-if="section.walk">
+                  <span v-if="section.walk.duration">Walk: {{ section.walk.duration }}</span>
+                </div>
+              </v-timeline-item>
+              <v-timeline-item small color="grey">
+                <b>{{ section.arrival.station.name }}</b>
+              </v-timeline-item>
+            </v-timeline>
           </div>
         </v-expansion-panel-content>
       </v-expansion-panel>
@@ -71,14 +98,14 @@ export default {
       let minutes = time.substr(6, 2);
       let output = "";
       if (hours != "00") {
-        var number  = hours.replace(/^0+/, ''); 
+        var number = hours.replace(/^0+/, "");
         output += number + "h and ";
       }
-      if(minutes != "00"){
-        var number  = minutes.replace(/^0+/, ''); 
+      if (minutes != "00") {
+        var number = minutes.replace(/^0+/, "");
         output += number + " min";
         return output;
-      }else{
+      } else {
         let newoutput = output.replace(" and ", "");
         return newoutput;
       }
@@ -88,7 +115,7 @@ export default {
 </script>
 
 <style>
-.headerContent {
+.connectionHeaderContent {
   display: flex;
   flex-direction: column;
   row-gap: 1rem;
@@ -108,15 +135,20 @@ export default {
   grid-template-columns: 15% 70% 15%;
 }
 
-.timelineDots{
+.timelineDots {
   position: absolute;
   width: 204px;
   display: flex;
   justify-content: space-around;
 }
 
-.connectionLength{
+.connectionLength {
   display: flex;
   justify-content: space-between;
+}
+
+.journeyDetails {
+  display: flex;
+  flex-direction: column;
 }
 </style>
