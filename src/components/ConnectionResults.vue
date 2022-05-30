@@ -60,7 +60,7 @@
                   <span>{{getProperTime(section.journey.passList[0].departure)}} <span class="delayNum" v-if="section.departure.delay != 0">+ {{section.departure.delay}}</span></span>
                 </div>
                 <div v-if="section.walk">
-                  <span v-if="section.walk.duration">Walk: {{ section.walk.duration }}</span>
+                  <span v-if="section.walk.duration">Walk: {{ section.walk.duration / 60 }} min</span>
                 </div>
               </v-timeline-item>
               <v-timeline-item small color="grey">
