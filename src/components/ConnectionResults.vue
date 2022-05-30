@@ -45,7 +45,7 @@
         <v-expansion-panel-content>
           <div v-for="section in connection.sections" :key="section">
             <v-timeline align-top dense>
-              <v-timeline-item small :color="section.departure.delay != 0 ? 'orange' : 'green'">
+              <v-timeline-item small :color="section.departure.delay ? 'orange' : 'green'">
                 <b>{{ section.departure.station.name }}</b> 
                 <br />
                 <div v-if="section.journey" class="journeyDetails">
