@@ -39,7 +39,6 @@ export default {
       fetch("http://transport.opendata.ch/v1/locations?" + params)
         .then((res) => res.json())
         .then((data) => {
-          console.log(data);
           this.$store.commit("updateStations", data);
         }
         )

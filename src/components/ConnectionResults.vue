@@ -45,8 +45,8 @@
         <v-expansion-panel-content>
           <div v-for="section in connection.sections" :key="section">
             <v-timeline align-top dense>
-              <v-timeline-item small color="grey">
-                <b>{{ section.departure.station.name }}</b>
+              <v-timeline-item small :color="section.departure.delay != 0 ? 'orange' : 'green'">
+                <b>{{ section.departure.station.name }}</b> 
                 <br />
                 <div v-if="section.journey" class="journeyDetails">
                   <span
@@ -57,7 +57,7 @@
                   <span
                     >Platform: {{ section.journey.passList[0].platform }}</span
                   >
-                  <span>{{getProperTime(section.journey.passList[0].departure)}}</span>
+                  <span>{{getProperTime(section.journey.passList[0].departure)}} <span class="delayNum" v-if="section.departure.delay != 0">+ {{section.departure.delay}}</span></span>
                 </div>
                 <div v-if="section.walk">
                   <span v-if="section.walk.duration">Walk: {{ section.walk.duration }}</span>
@@ -67,6 +67,7 @@
                 <b>{{ section.arrival.station.name }}</b>
               </v-timeline-item>
             </v-timeline>
+            <hr>
           </div>
         </v-expansion-panel-content>
       </v-expansion-panel>
@@ -151,5 +152,14 @@ export default {
 .journeyDetails {
   display: flex;
   flex-direction: column;
+}
+
+.v-timeline::before {
+    top: 55px;
+    height: calc(100% - 110px)
+}
+
+.delayNum {
+  color: red;
 }
 </style>
