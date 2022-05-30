@@ -57,7 +57,7 @@
                   <span
                     >Platform: {{ section.journey.passList[0].platform }}</span
                   >
-                  <span>{{getProperTime(section.journey.passList[0].departure)}} <span class="delayNum" v-if="section.departure.delay != 0">+ {{section.departure.delay}}</span></span>
+                  <span>{{getProperTime(section.journey.passList[0].departure)}} <span class="delayNum" v-if="section.departure.delay">+ {{section.departure.delay}}</span></span>
                 </div>
                 <div v-if="section.walk">
                   <span v-if="section.walk.duration">Walk: {{ section.walk.duration / 60 }} min</span>
@@ -116,7 +116,7 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 .connectionHeaderContent {
   display: flex;
   flex-direction: column;
