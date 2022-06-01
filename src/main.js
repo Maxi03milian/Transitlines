@@ -13,6 +13,8 @@ import { faTrainSubway, faBus, faCircleQuestion, faTrainTram, faArrowRight } fro
 /* import font awesome icon component */
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 
+import './registerServiceWorker'
+
 
 /* add icons to the library */
 library.add(faTrainSubway, faBus, faCircleQuestion, faTrainTram, faArrowRight)
