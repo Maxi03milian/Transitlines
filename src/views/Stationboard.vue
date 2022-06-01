@@ -9,10 +9,12 @@
         prepend-icon="mdi-map-marker"
         clearable
       ></v-text-field>
-      <v-btn class="myButton" elevation="2" @click="search(state.searchInput)">Go!</v-btn>
+      <v-btn class="myButton" elevation="2" @click="search(state.searchInput)"
+        >Go!</v-btn
+      >
     </div>
     <div class="content" v-if="state.stations != null">
-      <StationboardResults :stations="state.stations.stations"/>
+      <StationboardResults :stations="state.stations.stations" />
     </div>
   </div>
 </template>
@@ -36,12 +38,11 @@ export default {
   methods: {
     search(text) {
       let params = "query=" + text;
-      fetch("http://transport.opendata.ch/v1/locations?" + params)
+      fetch("https://transport.opendata.ch/v1/locations?" + params)
         .then((res) => res.json())
         .then((data) => {
           this.$store.commit("updateStations", data);
-        }
-        )
+        });
     },
   },
 };
@@ -61,14 +62,13 @@ export default {
   width: 10px !important;
 }
 
-.myButton{
+.myButton {
   margin-left: 10px;
   margin-bottom: 10px;
 }
 
-.content{
+.content {
   padding-left: 20px;
   padding-right: 20px;
 }
-
 </style>

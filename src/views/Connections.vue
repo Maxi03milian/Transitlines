@@ -60,7 +60,7 @@ export default {
       const params = "from=" + val1 + "&to=" + val2;
       this.loading = true;
 
-      fetch("http://transport.opendata.ch/v1/connections?" + params)
+      fetch("https://transport.opendata.ch/v1/connections?" + params)
         .then((res) => res.json())
         .then((data) => {
           this.$store.commit("updateConnections", data);
@@ -69,7 +69,7 @@ export default {
     },
     fromOptions(e) {
       let params = "query=" + e.target.value;
-      fetch("http://transport.opendata.ch/v1/locations?" + params)
+      fetch("https://transport.opendata.ch/v1/locations?" + params)
         .then((res) => res.json())
         .then((data) => {
           this.$store.commit("updateFromStations", data);
@@ -77,7 +77,7 @@ export default {
     },
     toOptions(e) {
       let params = "query=" + e.target.value;
-      fetch("http://transport.opendata.ch/v1/locations?" + params)
+      fetch("https://transport.opendata.ch/v1/locations?" + params)
         .then((res) => res.json())
         .then((data) => {
           this.$store.commit("updateToStations", data);
