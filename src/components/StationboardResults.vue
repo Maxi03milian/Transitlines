@@ -104,11 +104,10 @@ export default {
       var dateTime = date + " " + time;
 
       let params = "station=" + text + " &datetime" + dateTime;
-      fetch("http://transport.opendata.ch/v1/stationboard?" + params)
+      fetch("https://transport.opendata.ch/v1/stationboard?" + params)
         .then((res) => res.json())
         .then((data) => {
           this.stationBoard = data;
-          console.log(data);
         });
     },
   },
