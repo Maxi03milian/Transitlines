@@ -3,6 +3,7 @@
     <Header />
     <div class="input">
       <v-autocomplete
+        class="inputItem"
         id="input1"
         @input.native="fromOptions"
         :items="state.fromStations.stations"
@@ -10,9 +11,9 @@
         item-value="name"
         dense
         label="From"
-      ></v-autocomplete
-      ><br />
+      ></v-autocomplete>
       <v-autocomplete
+        class="inputItem"
         id="input2"
         @input.native="toOptions"
         :items="state.toStations.stations"
@@ -21,7 +22,62 @@
         dense
         label="To"
       ></v-autocomplete>
-      <v-btn class="myButton" elevation="2" @click="search">Go!</v-btn>
+      <div class="routeOptions">
+        <v-menu
+          ref="menu"
+          v-model="menu"
+          :close-on-content-click="false"
+          transition="scale-transition"
+          offset-y
+          min-width="auto"
+        >
+          <template v-slot:activator="{ on, attrs }">
+            <v-text-field
+              v-model="state.routeOptions.date"
+              id="input3"
+              label="Date"
+              prepend-icon="mdi-calendar"
+              readonly
+              v-bind="attrs"
+              v-on="on"
+            ></v-text-field>
+          </template>
+          <v-date-picker
+            v-model="state.routeOptions.date"
+            class="optionModal"
+            min="1950-01-01"
+          ></v-date-picker>
+        </v-menu>
+        <v-menu
+          ref="menu"
+          :close-on-content-click="false"
+          :nudge-right="40"
+          :return-value.sync="time"
+          transition="scale-transition"
+          offset-y
+          max-width="290px"
+          min-width="290px"
+        >
+          <template v-slot:activator="{ on, attrs }">
+            <v-text-field
+              v-model="state.routeOptions.time"
+              id="input4"
+              label="Picker in menu"
+              prepend-icon="mdi-clock-time-four-outline"
+              readonly
+              v-bind="attrs"
+              v-on="on"
+            ></v-text-field>
+          </template>
+          <v-time-picker
+            v-model="state.routeOptions.time"
+            class="optionModal"
+            full-width
+            @click:minute="$refs.menu.save(time)"
+          ></v-time-picker>
+        </v-menu>
+      </div>
+      <v-btn class="inputItem" elevation="2" @click="search">Go!</v-btn>
     </div>
     <div class="loadingSpinner" v-if="this.loading">
       <v-progress-circular indeterminate color="grey"></v-progress-circular>
@@ -41,6 +97,9 @@ export default {
   data() {
     return {
       loading: false,
+      time: null,
+      menu: false,
+      menu2: false,
     };
   },
 
@@ -57,7 +116,10 @@ export default {
     search() {
       const val1 = document.querySelector("#input1").value;
       const val2 = document.querySelector("#input2").value;
-      const params = "from=" + val1 + "&to=" + val2;
+      const val3 = document.querySelector("#input3").value;
+      const val4 = document.querySelector("#input4").value;
+
+      const params = "from=" + val1 + "&to=" + val2 + "&date=" + val3 + "&time=" + val4;
       this.loading = true;
 
       fetch("https://transport.opendata.ch/v1/connections?" + params)
@@ -94,5 +156,26 @@ export default {
 }
 .v-progress-circular {
   text-align: center;
+}
+
+.input {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 3rem;
+}
+
+.inputItem {
+  width: 100%;
+}
+
+.routeOptions{
+  display: flex;
+  flex-direction: row;
+}
+
+.v-menu_content {
+  position: fixed;
+  top: 50%;
+  left: 50%;
 }
 </style>

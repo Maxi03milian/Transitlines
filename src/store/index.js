@@ -10,6 +10,10 @@ export default new Vuex.Store({
     searchInput: "",
     fromStations: {},
     toStations: {},
+    routeOptions: {
+      date: (new Date(Date.now() - (new Date()).getTimezoneOffset() * 60000)).toISOString().substr(0, 10),
+      time: new Date().toLocaleTimeString('de-CH', { hour12: false }),
+    }
   },
   mutations: {
     updateStations (state, val){
