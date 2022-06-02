@@ -77,10 +77,7 @@
           ></v-time-picker>
         </v-menu>
       </div>
-      <v-btn class="inputItem" elevation="2" @click="search">Go!</v-btn>
-    </div>
-    <div class="loadingSpinner" v-if="this.loading">
-      <v-progress-circular indeterminate color="grey"></v-progress-circular>
+      <v-btn class="inputItem button" dark :loading="loading" elevation="2" @click="search">Go!</v-btn>
     </div>
     <div class="content" v-if="state.connections != null && !this.loading">
       <ConnectionResults :connections="state.connections" />
