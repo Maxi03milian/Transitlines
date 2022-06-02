@@ -3,7 +3,7 @@
    <section class="navigation">
   <div class="nav-container">
     <div class="brand">
-      <a href="/"><img src="" alt="Logo"></a>
+      <a href="/"><img src="../assets/logo.png" alt="Logo"></a>
     </div>
     <nav>
       <div class="nav-mobile"><a id="nav-toggle" href="#!"><span></span></a></div>
