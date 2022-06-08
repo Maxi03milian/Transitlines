@@ -41,4 +41,8 @@ export default {
 </script>
 
 <style>
+.content {
+  padding-left: 20px;
+  padding-right: 20px;
+}
 </style>

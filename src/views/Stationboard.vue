@@ -48,7 +48,7 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 .input {
   margin-top: 30px;
   display: flex;
@@ -65,10 +65,5 @@ export default {
 .myButton {
   margin-left: 10px;
   margin-bottom: 10px;
-}
-
-.content {
-  padding-left: 20px;
-  padding-right: 20px;
 }
 </style>

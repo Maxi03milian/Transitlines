@@ -146,7 +146,7 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 .loadingSpinner {
   display: flex;
   justify-content: center;
@@ -159,6 +159,8 @@ export default {
   display: flex;
   flex-direction: column;
   margin-bottom: 3rem;
+  padding-left: 20px;
+  padding-right: 20px;
 }
 
 .inputItem {
