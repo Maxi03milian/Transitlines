@@ -18,9 +18,3 @@ export default {
   },
 };
 </script>
-
-<style>
-body{
-  overscroll-behavior: none !important;
-}
-</style>
