@@ -63,7 +63,7 @@
             <v-text-field
               v-model="state.routeOptions.time"
               id="input4"
-              label="Picker in menu"
+              label="Time"
               prepend-icon="mdi-clock-time-four-outline"
               readonly
               v-bind="attrs"
