@@ -44,6 +44,7 @@
           </template>
           <v-date-picker
             v-model="state.routeOptions.date"
+            color="#262626"
             class="optionModal"
             min="1950-01-01"
           ></v-date-picker>
@@ -72,6 +73,7 @@
           <v-time-picker
             v-model="state.routeOptions.time"
             class="optionModal"
+            color="#262626"
             full-width
             @click:minute="$refs.menu.save(time)"
           ></v-time-picker>
