@@ -5,7 +5,7 @@
       <div class="title">
         <h2>Transit</h2>
       </div>
-    <p>Quick navigation</p>
+      <p>Quick navigation</p>
       <Navcard
         title="Connections"
         text="Look up connections between 2 Stations"
@@ -16,6 +16,11 @@
         text="Look up all upcoming connections on a specific station"
         link="/stationboard"
       />
+      <br>
+      <div class="title">
+        <h2>Journeys</h2>
+      </div>
+      <p>Saved Trips</p>
     </div>
   </div>
 </template>
