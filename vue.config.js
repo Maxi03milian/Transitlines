@@ -4,6 +4,6 @@ module.exports = {
   ],
   pwa: {
     name: "Transitlines",
-    themeColor: "#00B16A"
+    themeColor: "#262626"
   }
 }
