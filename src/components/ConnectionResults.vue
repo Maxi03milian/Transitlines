@@ -80,6 +80,16 @@
                 </v-timeline-item>
                 <v-timeline-item small color="grey">
                   <b>{{ section.arrival.station.name }}</b>
+                  <br />
+                  <div class="journeyDetails">
+                    <span>Platform: {{ section.arrival.platform }}</span>
+                    <span
+                      >{{ getProperTime(section.arrival.arrival) }}
+                      <span class="delayNum" v-if="section.arrival.delay"
+                        >+ {{ section.arrival.delay }}</span
+                      ></span
+                    >
+                  </div>
                 </v-timeline-item>
               </div>
             </v-timeline>
@@ -179,7 +189,7 @@ export default {
   color: red;
 }
 
-.walkingSection{
+.walkingSection {
   display: flex;
   justify-content: center;
   align-items: center;
