@@ -54,7 +54,6 @@
                 <v-timeline-item
                   small
                   :color="section.departure.delay ? 'orange' : 'green'"
-                  :class="section.departure.delay ? 'blinking' : ''"
                 >
                   <b>{{ section.departure.station.name }}</b>
                   <br />
@@ -72,20 +71,20 @@
                       >{{
                         getProperTime(section.journey.passList[0].departure)
                       }}
-                      <span class="delayNum" v-if="section.departure.delay"
+                      <span class="delayNum" v-if="section.departure.delay" :class="section.departure.delay ? 'blinking' : ''"
                         >+ {{ section.departure.delay }}</span
                       ></span
                     >
                   </div>
                 </v-timeline-item>
-                <v-timeline-item small color="grey">
+                <v-timeline-item small :color="section.arrival.delay ? 'orange' : 'green'">
                   <b>{{ section.arrival.station.name }}</b>
                   <br />
                   <div class="journeyDetails">
                     <span>Platform: {{ section.arrival.platform }}</span>
                     <span
                       >{{ getProperTime(section.arrival.arrival) }}
-                      <span class="delayNum" v-if="section.arrival.delay"
+                      <span class="delayNum" v-if="section.arrival.delay" :class="section.arrival.delay ? 'blinking' : ''"
                         >+ {{ section.arrival.delay }}</span
                       ></span
                     >
