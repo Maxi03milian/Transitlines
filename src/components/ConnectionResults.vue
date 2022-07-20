@@ -45,38 +45,43 @@
         <v-expansion-panel-content>
           <div v-for="section in connection.sections" :key="section">
             <v-timeline align-top dense>
-              <v-timeline-item
-                small
-                :color="section.departure.delay ? 'orange' : 'green'"
-                :class="section.departure.delay ? 'blinking' : ''"
-              >
-                <b>{{ section.departure.station.name }}</b>
-                <br />
-                <div v-if="section.journey" class="journeyDetails">
-                  <span
-                    >{{ section.journey.category }}
-                    {{ section.journey.number }} Richtung
-                    {{ section.journey.to }}</span
-                  >
-                  <span
-                    >Platform: {{ section.journey.passList[0].platform }}</span
-                  >
-                  <span
-                    >{{ getProperTime(section.journey.passList[0].departure) }}
-                    <span class="delayNum" v-if="section.departure.delay"
-                      >+ {{ section.departure.delay }}</span
-                    ></span
-                  >
-                </div>
-                <div v-if="section.walk">
-                  <span v-if="section.walk.duration"
-                    >Walk: {{ section.walk.duration / 60 }} min</span
-                  >
-                </div>
-              </v-timeline-item>
-              <v-timeline-item small color="grey">
-                <b>{{ section.arrival.station.name }}</b>
-              </v-timeline-item>
+              <div v-if="section.walk" class="walkingSection">
+                <span v-if="section.walk.duration"
+                  >Walk: {{ section.walk.duration / 60 }} min</span
+                >
+              </div>
+              <div v-if="!section.walk">
+                <v-timeline-item
+                  small
+                  :color="section.departure.delay ? 'orange' : 'green'"
+                  :class="section.departure.delay ? 'blinking' : ''"
+                >
+                  <b>{{ section.departure.station.name }}</b>
+                  <br />
+                  <div v-if="section.journey" class="journeyDetails">
+                    <span
+                      >{{ section.journey.category }}
+                      {{ section.journey.number }} Richtung
+                      {{ section.journey.to }}</span
+                    >
+                    <span
+                      >Platform:
+                      {{ section.journey.passList[0].platform }}</span
+                    >
+                    <span
+                      >{{
+                        getProperTime(section.journey.passList[0].departure)
+                      }}
+                      <span class="delayNum" v-if="section.departure.delay"
+                        >+ {{ section.departure.delay }}</span
+                      ></span
+                    >
+                  </div>
+                </v-timeline-item>
+                <v-timeline-item small color="grey">
+                  <b>{{ section.arrival.station.name }}</b>
+                </v-timeline-item>
+              </div>
             </v-timeline>
             <hr />
           </div>
@@ -174,6 +179,13 @@ export default {
   color: red;
 }
 
+.walkingSection{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding-bottom: 24px;
+}
+
 .blinking {
   animation: blinker 1s linear infinite !important;
 }
@@ -183,5 +195,4 @@ export default {
     opacity: 0;
   }
 }
-
 </style>
