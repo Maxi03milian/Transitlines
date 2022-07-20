@@ -79,7 +79,47 @@
           ></v-time-picker>
         </v-menu>
       </div>
-      <v-btn class="inputItem button" dark :loading="loading" elevation="2" @click="search">Go!</v-btn>
+      <div class="routeSettings">
+        <v-expansion-panels>
+          <v-expansion-panel>
+            <v-expansion-panel-header>
+              Route Settings
+            </v-expansion-panel-header>
+            <v-expansion-panel-content>
+              <div class="routeSettings-top">
+                <v-switch
+                  class="sliderSwitch"
+                  v-model="state.routeOptions.isArrivalTime"
+                  label="Arrival Time"
+                  color="#262626"
+                  :value="state.routeOptions.isArrivalTime"
+                  hide-details
+                ></v-switch
+                >
+                <v-switch
+                  class="sliderSwitch"
+                  v-model="state.routeOptions.bike"
+                  label="Transporting Bike"
+                  color="#262626"
+                  :value="state.routeOptions.bike"
+                  hide-details
+                ></v-switch>
+              </div>
+              <div class="routeSettings-bottom">
+
+              </div>
+            </v-expansion-panel-content>
+          </v-expansion-panel>
+        </v-expansion-panels>
+      </div>
+      <v-btn
+        class="inputItem button"
+        dark
+        :loading="loading"
+        elevation="2"
+        @click="search"
+        >Go!</v-btn
+      >
     </div>
     <div class="content" v-if="state.connections != null && !this.loading">
       <ConnectionResults :connections="state.connections" />
@@ -113,12 +153,27 @@ export default {
   },
   methods: {
     search() {
+      let state = this.$store.state;
       const val1 = document.querySelector("#input1").value;
       const val2 = document.querySelector("#input2").value;
       const val3 = document.querySelector("#input3").value;
       const val4 = document.querySelector("#input4").value;
 
-      const params = "from=" + val1 + "&to=" + val2 + "&date=" + val3 + "&time=" + val4;
+      const params =
+        "from=" +
+        val1 +
+        "&to=" +
+        val2 +
+        "&date=" +
+        val3 +
+        "&time=" +
+        val4 +
+        "&isArrivalTime=" +
+        +state.routeOptions.isArrivalTime +
+        "&limit=" +
+        5 +
+        "&bike=" +
+        +state.routeOptions.bike;
       this.loading = true;
 
       fetch("https://transport.opendata.ch/v1/connections?" + params)
@@ -169,14 +224,31 @@ export default {
   width: 100%;
 }
 
-.routeOptions{
+.routeOptions {
   display: flex;
   flex-direction: row;
+}
+
+.routeSettings {
+  display: flex;
+  flex-direction: row;
+  margin-bottom: 1rem;
+}
+
+.sliderSwitch {
+  margin-top: 0px !important;
+  padding-top: 0px !important;
 }
 
 .v-menu_content {
   position: fixed;
   top: 50%;
   left: 50%;
+}
+
+.routeSettings-top {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
 }
 </style>
