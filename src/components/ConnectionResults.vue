@@ -3,7 +3,7 @@
     <v-expansion-panels>
       <v-expansion-panel
         v-for="connection in connections.connections"
-        :key="connection.id"
+        :key="connection.from.id"
         class="connectionCard"
       >
         <v-expansion-panel-header>
@@ -43,7 +43,7 @@
           </div>
         </v-expansion-panel-header>
         <v-expansion-panel-content>
-          <div v-for="section in connection.sections" :key="section">
+          <div v-for="section in connection.sections" :key="section.departure.station.name">
             <v-timeline align-top dense>
               <div v-if="section.walk" class="walkingSection">
                 <span v-if="section.walk.duration"
