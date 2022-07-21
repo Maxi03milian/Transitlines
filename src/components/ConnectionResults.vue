@@ -53,7 +53,7 @@
               <div v-if="!section.walk">
                 <v-timeline-item
                   small
-                  :color="section.departure.delay ? 'orange' : 'green'"
+                  :color="getDelayColor(section.departure.delay)"
                 >
                   <b>{{ section.departure.station.name }}</b>
                   <br />
@@ -77,7 +77,7 @@
                     >
                   </div>
                 </v-timeline-item>
-                <v-timeline-item small :color="section.arrival.delay ? 'orange' : 'green'">
+                <v-timeline-item small :color="getDelayColor(section.departure.delay)">
                   <b>{{ section.arrival.station.name }}</b>
                   <br />
                   <div class="journeyDetails">
@@ -97,6 +97,7 @@
         </v-expansion-panel-content>
       </v-expansion-panel>
     </v-expansion-panels>
+      <br><br>
   </div>
 </template>
 
@@ -135,6 +136,15 @@ export default {
       } else {
         let newoutput = output.replace(" and ", "");
         return newoutput;
+      }
+    },
+    getDelayColor(delay) {
+      if (delay > 3) {
+        return "red";
+      } else if(delay > 0){
+        return "orange";
+      }else{
+        return "green";
       }
     },
   },
