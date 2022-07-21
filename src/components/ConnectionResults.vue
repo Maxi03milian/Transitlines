@@ -77,7 +77,7 @@
                     >
                   </div>
                 </v-timeline-item>
-                <v-timeline-item small :color="getDelayColor(section.departure.delay)">
+                <v-timeline-item small :color="getDelayColor(section.arrival.delay)">
                   <b>{{ section.arrival.station.name }}</b>
                   <br />
                   <div class="journeyDetails">
