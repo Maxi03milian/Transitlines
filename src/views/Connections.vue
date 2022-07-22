@@ -18,7 +18,7 @@
         color="#262626"
         id="input2"
         @input.native="toOptions"
-         :items="isSearching2 ? state.toStations.stations : existingSearch"
+        :items="isSearching2 ? state.toStations.stations : existingSearch"
         item-text="name"
         item-value="name"
         dense
@@ -152,7 +152,10 @@ export default {
       return this.$store.state;
     },
     existingSearch() {
-      return localStorage.getItem("prevLocations").split(/,(?!\s)/g);
+      return localStorage
+        .getItem("prevLocations")
+        .split(/,(?!\s)/g)
+        .reverse();
     },
     isSearching1() {
       if (
@@ -164,7 +167,6 @@ export default {
       ) {
         return false;
       } else {
-
         return true;
       }
     },
@@ -208,23 +210,41 @@ export default {
       this.loading = true;
       //localStorage.setItem("lastSearch", params);
 
+      // Save searches for autocomplete
       let existingEntries;
       if (localStorage.getItem("prevLocations") != null) {
-        existingEntries = JSON.parse(JSON.stringify(localStorage.getItem("prevLocations")));
+        existingEntries = JSON.parse(
+          JSON.stringify(localStorage.getItem("prevLocations"))
+        );
       } else {
         existingEntries = [];
       }
       if (!existingEntries.includes(val1)) {
-        if(typeof existingEntries == 'string'){
-          existingEntries += (',' + val1);
-        }else{
+        if (typeof existingEntries == "string") {
+          existingEntries += "," + val1;
+        } else {
           existingEntries.push(val1);
+        }
+      } else {
+        if (typeof existingEntries == "string") {
+          existingEntries.replace("," + val1,'');
+          existingEntries += "," + val1;
+        } else {
+          existingEntries.push(existingEntries.splice(val1, 1)[0]);
         }
       }
       if (!existingEntries.includes(val2)) {
-        if(typeof existingEntries == 'string'){
-          existingEntries += (',' + val2);
-        }else{
+        if (typeof existingEntries == "string") {
+          existingEntries += "," + val2;
+        } else {
+          existingEntries.push(val2);
+        }
+      }else {
+        if (typeof existingEntries == "string") {
+          existingEntries.replace("," + val2,'');
+          existingEntries += "," + val2;
+        } else {
+          existingEntries.splice(val2, 1);
           existingEntries.push(val2);
         }
       }
