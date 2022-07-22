@@ -4,6 +4,7 @@
     <div class="input">
       <v-autocomplete
         class="inputItem"
+        color="#262626"
         id="input1"
         @input.native="fromOptions"
         :items="isSearching1 ? state.fromStations.stations : existingSearch"
@@ -14,6 +15,7 @@
       ></v-autocomplete>
       <v-autocomplete
         class="inputItem"
+        color="#262626"
         id="input2"
         @input.native="toOptions"
          :items="isSearching2 ? state.toStations.stations : existingSearch"
@@ -34,6 +36,7 @@
           <template v-slot:activator="{ on, attrs }">
             <v-text-field
               v-model="state.routeOptions.date"
+              color="#262626"
               id="input3"
               label="Date"
               prepend-icon="mdi-calendar"
@@ -62,6 +65,7 @@
           <template v-slot:activator="{ on, attrs }">
             <v-text-field
               v-model="state.routeOptions.time"
+              color="#262626"
               id="input4"
               label="Time"
               prepend-icon="mdi-clock-time-four-outline"
