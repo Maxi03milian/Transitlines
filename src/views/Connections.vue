@@ -221,7 +221,6 @@ export default {
       }
       if (!existingEntries.includes(val2)) {
           existingEntries.push(val2);
-
       } else {
           existingEntries.push(existingEntries.splice(val2, 1)[0]);
       }
