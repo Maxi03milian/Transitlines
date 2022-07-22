@@ -6,7 +6,7 @@
         class="inputItem"
         id="input1"
         @input.native="fromOptions"
-        :items="state.fromStations.stations"
+        :items="isSearching1 ? state.fromStations.stations : existingSearch"
         item-text="name"
         item-value="name"
         dense
@@ -16,7 +16,7 @@
         class="inputItem"
         id="input2"
         @input.native="toOptions"
-        :items="state.toStations.stations"
+         :items="isSearching2 ? state.toStations.stations : existingSearch"
         item-text="name"
         item-value="name"
         dense
@@ -94,8 +94,7 @@
                   color="#262626"
                   :value="state.routeOptions.isArrivalTime"
                   hide-details
-                ></v-switch
-                >
+                ></v-switch>
                 <v-switch
                   class="sliderSwitch"
                   v-model="state.routeOptions.bike"
@@ -105,9 +104,7 @@
                   hide-details
                 ></v-switch>
               </div>
-              <div class="routeSettings-bottom">
-
-              </div>
+              <div class="routeSettings-bottom"></div>
             </v-expansion-panel-content>
           </v-expansion-panel>
         </v-expansion-panels>
@@ -150,6 +147,36 @@ export default {
     state() {
       return this.$store.state;
     },
+    existingSearch() {
+      return localStorage.getItem("prevLocations").split(/,(?!\s)/g);
+    },
+    isSearching1() {
+      if (
+        (localStorage.getItem("prevLocations") != null &&
+          !this.$store.state.fromStations.stations) ||
+        (this.$store.state.fromStations.stations != undefined
+          ? this.$store.state.fromStations.stations.length == 0
+          : null)
+      ) {
+        return false;
+      } else {
+
+        return true;
+      }
+    },
+    isSearching2() {
+      if (
+        (localStorage.getItem("prevLocations") != null &&
+          !this.$store.state.toStations.stations) ||
+        (this.$store.state.toStations.stations != undefined
+          ? this.$store.state.toStations.stations.length == 0
+          : null)
+      ) {
+        return false;
+      } else {
+        return true;
+      }
+    },
   },
   methods: {
     search() {
@@ -175,6 +202,29 @@ export default {
         "&bike=" +
         +state.routeOptions.bike;
       this.loading = true;
+      //localStorage.setItem("lastSearch", params);
+
+      let existingEntries;
+      if (localStorage.getItem("prevLocations") != null) {
+        existingEntries = JSON.parse(JSON.stringify(localStorage.getItem("prevLocations")));
+      } else {
+        existingEntries = [];
+      }
+      if (!existingEntries.includes(val1)) {
+        if(typeof existingEntries == 'string'){
+          existingEntries += (',' + val1);
+        }else{
+          existingEntries.push(val1);
+        }
+      }
+      if (!existingEntries.includes(val2)) {
+        if(typeof existingEntries == 'string'){
+          existingEntries += (',' + val2);
+        }else{
+          existingEntries.push(val2);
+        }
+      }
+      localStorage.setItem("prevLocations", existingEntries);
 
       fetch("https://transport.opendata.ch/v1/connections?" + params)
         .then((res) => res.json())
