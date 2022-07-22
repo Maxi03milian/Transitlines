@@ -217,12 +217,12 @@ export default {
       if (!existingEntries.includes(val1)) {
           existingEntries.push(val1);
       } else {
-        existingEntries.push(existingEntries.splice(val1, 1)[0]);
+        existingEntries.push(existingEntries.splice(existingEntries.indexOf(val1), 1)[0]);
       }
       if (!existingEntries.includes(val2)) {
           existingEntries.push(val2);
       } else {
-          existingEntries.push(existingEntries.splice(val2, 1)[0]);
+          existingEntries.push(existingEntries.splice(existingEntries.indexOf(val2), 1)[0]);
       }
       localStorage.setItem("prevLocations", JSON.stringify(existingEntries));
 
