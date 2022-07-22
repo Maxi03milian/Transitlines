@@ -152,10 +152,7 @@ export default {
       return this.$store.state;
     },
     existingSearch() {
-      return localStorage
-        .getItem("prevLocations")
-        .split(/,(?!\s)/g)
-        .reverse();
+      return JSON.parse(localStorage.getItem("prevLocations")).reverse();
     },
     isSearching1() {
       if (
@@ -213,42 +210,22 @@ export default {
       // Save searches for autocomplete
       let existingEntries;
       if (localStorage.getItem("prevLocations") != null) {
-        existingEntries = JSON.parse(
-          JSON.stringify(localStorage.getItem("prevLocations"))
-        );
+        existingEntries = JSON.parse(localStorage.getItem("prevLocations"));
       } else {
         existingEntries = [];
       }
       if (!existingEntries.includes(val1)) {
-        if (typeof existingEntries == "string") {
-          existingEntries += "," + val1;
-        } else {
           existingEntries.push(val1);
-        }
       } else {
-        if (typeof existingEntries == "string") {
-          existingEntries.replace("," + val1,'');
-          existingEntries += "," + val1;
-        } else {
-          existingEntries.push(existingEntries.splice(val1, 1)[0]);
-        }
+        existingEntries.push(existingEntries.splice(val1, 1)[0]);
       }
       if (!existingEntries.includes(val2)) {
-        if (typeof existingEntries == "string") {
-          existingEntries += "," + val2;
-        } else {
           existingEntries.push(val2);
-        }
-      }else {
-        if (typeof existingEntries == "string") {
-          existingEntries.replace("," + val2,'');
-          existingEntries += "," + val2;
-        } else {
-          existingEntries.splice(val2, 1);
-          existingEntries.push(val2);
-        }
+
+      } else {
+          existingEntries.push(existingEntries.splice(val2, 1)[0]);
       }
-      localStorage.setItem("prevLocations", existingEntries);
+      localStorage.setItem("prevLocations", JSON.stringify(existingEntries));
 
       fetch("https://transport.opendata.ch/v1/connections?" + params)
         .then((res) => res.json())
