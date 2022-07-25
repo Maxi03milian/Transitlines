@@ -1,7 +1,7 @@
 <template>
   <div>
     <Header />
-    <div class="input">
+    <div class="input container">
       <v-text-field
         v-model="state.searchInput"
         label="Search"

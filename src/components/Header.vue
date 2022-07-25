@@ -64,8 +64,9 @@ img {
   padding-top: 5px;
 }
 .app {
-  margin-bottom: 1rem;
   width: 100%;
   overflow: hidden !important;
+  position: fixed;
+  z-index: 2;
 }
 </style>

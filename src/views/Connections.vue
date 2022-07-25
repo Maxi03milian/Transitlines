@@ -1,7 +1,7 @@
 <template>
   <div>
     <Header />
-    <div class="input">
+    <div class="input container">
       <v-autocomplete
         class="inputItem"
         color="#262626"

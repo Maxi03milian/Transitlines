@@ -1,7 +1,7 @@
 <template>
   <div>
     <Header />
-    <div class="content">
+    <div class="content container">
       <div class="title">
         <h2>Transit</h2>
       </div>
@@ -49,5 +49,8 @@ export default {
 .content {
   padding-left: 20px;
   padding-right: 20px;
+}
+.container{
+    margin-top: 4rem;
 }
 </style>
