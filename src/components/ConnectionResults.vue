@@ -43,7 +43,10 @@
           </div>
         </v-expansion-panel-header>
         <v-expansion-panel-content>
-          <div v-for="section in connection.sections" :key="section.departure.station.name">
+          <div
+            v-for="section in connection.sections"
+            :key="section.departure.station.name"
+          >
             <v-timeline align-top dense>
               <div v-if="section.walk" class="walkingSection">
                 <span v-if="section.walk.duration"
@@ -71,20 +74,65 @@
                       >{{
                         getProperTime(section.journey.passList[0].departure)
                       }}
-                      <span class="delayNum" v-if="section.departure.delay" :class="section.departure.delay ? 'blinking' : ''"
+                      <span
+                        class="delayNum"
+                        v-if="section.departure.delay"
+                        :class="section.departure.delay ? 'blinking' : ''"
                         >+ {{ section.departure.delay }}</span
                       ></span
                     >
+                    <span>
+                      <v-dialog v-model="dialog" width="400">
+                        <template v-slot:activator="{ on, attrs }">
+                          <v-btn
+                            color="grey"
+                            dark
+                            v-bind="attrs"
+                            v-on="on"
+                          >
+                            Passlist
+                          </v-btn>
+                        </template>
+                        <v-card>
+                          <v-card-title class="text-h5 grey lighten-2">
+                          <span>
+                            {{ section.journey.category }}
+                            {{ section.journey.number }} Richtung
+                            {{ section.journey.to }}
+                          </span>
+                          </v-card-title>
+
+                          <v-card-text>
+                            <v-timeline align-top dense>
+                              <v-timeline-item small color="green"><b>{{ section.journey.passList[0].station.name}}</b><br />Platform: {{section.journey.passList[0].platform}}<br />{{ getProperTime(section.journey.passList[0].departure) }}</v-timeline-item>
+                              <v-timeline-item small v-for="stop in section.journey.passList.slice(1)" :key="stop.station.id" :color="stop.station.name == section.arrival.station.name  ? 'green' : 'grey'"> <b>{{ stop.station.name }}</b><br />{{ getProperTime(stop.arrival)}}               
+                                <span
+                                  class="delayNum blinking"
+                                  v-if="stop.delay"
+                                  >+ {{ stop.delay }}
+                                </span>     
+                            </v-timeline-item>
+                            </v-timeline>
+                          </v-card-text>
+                        </v-card>
+                      </v-dialog>
+                    </span>
                   </div>
                 </v-timeline-item>
-                <v-timeline-item small :color="getDelayColor(section.arrival.delay)">
+                <v-timeline-item
+                  small
+                  :color="getDelayColor(section.arrival.delay)"
+                >
                   <b>{{ section.arrival.station.name }}</b>
                   <br />
                   <div class="journeyDetails">
                     <span>Platform: {{ section.arrival.platform }}</span>
                     <span
                       >{{ getProperTime(section.arrival.arrival) }}
-                      <span class="delayNum" v-if="section.arrival.delay" :class="section.arrival.delay ? 'blinking' : ''"
+                      <span
+                        class="delayNum"
+                        v-if="section.arrival.delay"
+                        :class="section.arrival.delay ? 'blinking' : ''"
                         >+ {{ section.arrival.delay }}</span
                       ></span
                     >
@@ -97,7 +145,7 @@
         </v-expansion-panel-content>
       </v-expansion-panel>
     </v-expansion-panels>
-      <br><br>
+    <br /><br />
   </div>
 </template>
 
@@ -105,7 +153,6 @@
 import FlexibleIcon from "../components/FlexibleIcon";
 export default {
   name: "ConnectionResults",
-
   components: {
     FlexibleIcon,
   },
@@ -141,9 +188,9 @@ export default {
     getDelayColor(delay) {
       if (delay > 3) {
         return "red";
-      } else if(delay > 0){
+      } else if (delay > 0) {
         return "orange";
-      }else{
+      } else {
         return "green";
       }
     },
