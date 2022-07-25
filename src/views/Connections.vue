@@ -331,9 +331,8 @@ export default {
 }
 
 .switchButtonContainer {
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  padding-top: 1.5rem;
+  padding-left: 0.3rem;
 }
 
 .switchButton {
