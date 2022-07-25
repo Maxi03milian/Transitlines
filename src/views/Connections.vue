@@ -1,7 +1,7 @@
 <template>
   <div>
     <Header />
-    <div class="input container">
+    <div class="input container content">
       <v-autocomplete
         class="inputItem"
         color="#262626"
@@ -208,23 +208,29 @@ export default {
       //localStorage.setItem("lastSearch", params);
 
       // Save searches for autocomplete
-      let existingEntries;
-      if (localStorage.getItem("prevLocations") != null) {
-        existingEntries = JSON.parse(localStorage.getItem("prevLocations"));
-      } else {
-        existingEntries = [];
-      }
-      if (!existingEntries.includes(val1)) {
+      if (val1 != "" && val2 != "") {
+        let existingEntries;
+        if (localStorage.getItem("prevLocations") != null) {
+          existingEntries = JSON.parse(localStorage.getItem("prevLocations"));
+        } else {
+          existingEntries = [];
+        }
+        if (!existingEntries.includes(val1)) {
           existingEntries.push(val1);
-      } else {
-        existingEntries.push(existingEntries.splice(existingEntries.indexOf(val1), 1)[0]);
-      }
-      if (!existingEntries.includes(val2)) {
+        } else {
+          existingEntries.push(
+            existingEntries.splice(existingEntries.indexOf(val1), 1)[0]
+          );
+        }
+        if (!existingEntries.includes(val2)) {
           existingEntries.push(val2);
-      } else {
-          existingEntries.push(existingEntries.splice(existingEntries.indexOf(val2), 1)[0]);
+        } else {
+          existingEntries.push(
+            existingEntries.splice(existingEntries.indexOf(val2), 1)[0]
+          );
+        }
+        localStorage.setItem("prevLocations", JSON.stringify(existingEntries));
       }
-      localStorage.setItem("prevLocations", JSON.stringify(existingEntries));
 
       fetch("https://transport.opendata.ch/v1/connections?" + params)
         .then((res) => res.json())
@@ -265,9 +271,7 @@ export default {
 .input {
   display: flex;
   flex-direction: column;
-  margin-bottom: 3rem;
-  padding-left: 20px;
-  padding-right: 20px;
+  margin-bottom: 2rem;
 }
 
 .inputItem {

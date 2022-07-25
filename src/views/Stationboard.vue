@@ -1,7 +1,7 @@
 <template>
   <div>
     <Header />
-    <div class="input container">
+    <div class="input container content">
       <v-text-field
         v-model="state.searchInput"
         label="Search"
@@ -50,12 +50,9 @@ export default {
 
 <style scoped>
 .input {
-  margin-top: 30px;
   display: flex;
   justify-content: center;
   align-items: center;
-  padding-left: 20px;
-  padding-right: 20px;
 }
 
 .inputField {
