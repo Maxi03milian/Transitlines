@@ -2,28 +2,41 @@
   <div>
     <Header />
     <div class="input container content">
-      <v-autocomplete
-        class="inputItem"
-        color="#262626"
-        id="input1"
-        @input.native="fromOptions"
-        :items="isSearching1 ? state.fromStations.stations : existingSearch"
-        item-text="name"
-        item-value="name"
-        dense
-        label="From"
-      ></v-autocomplete>
-      <v-autocomplete
-        class="inputItem"
-        color="#262626"
-        id="input2"
-        @input.native="toOptions"
-        :items="isSearching2 ? state.toStations.stations : existingSearch"
-        item-text="name"
-        item-value="name"
-        dense
-        label="To"
-      ></v-autocomplete>
+      <div class="topInputs">
+        <div class="textInputs">
+          <v-autocomplete
+            class="inputItem"
+            color="#262626"
+            id="input1"
+            @input.native="fromOptions"
+            :items="isSearching1 ? state.fromStations.stations : existingSearch"
+            item-text="name"
+            item-value="name"
+            dense
+            label="From"
+          ></v-autocomplete>
+          <v-autocomplete
+            class="inputItem"
+            color="#262626"
+            id="input2"
+            @input.native="toOptions"
+            :items="isSearching2 ? state.toStations.stations : existingSearch"
+            item-text="name"
+            item-value="name"
+            dense
+            label="To"
+          ></v-autocomplete>
+        </div>
+        <div class="switchButtonContainer">
+          <button class="switchButton" @click="swapSearch">
+            <font-awesome-icon
+              icon="fa-solid fa-retweet"
+              size="2x"
+              class="customIcons"
+            />
+          </button>
+        </div>
+      </div>
       <div class="routeOptions">
         <v-menu
           ref="menu"
@@ -255,6 +268,12 @@ export default {
           this.$store.commit("updateToStations", data);
         });
     },
+    swapSearch() {
+      const val1 = document.querySelector("#input1").value;
+      const val2 = document.querySelector("#input2").value;
+      document.querySelector("#input1").value = val2;
+      document.querySelector("#input2").value = val1;
+    },
   },
 };
 </script>
@@ -304,5 +323,20 @@ export default {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
+}
+
+.topInputs {
+  display: grid;
+  grid-template-columns: 90% 10%;
+}
+
+.switchButtonContainer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.switchButton {
+  transform: rotate(90deg);
 }
 </style>

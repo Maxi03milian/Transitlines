@@ -8,7 +8,7 @@ import vuetify from './plugins/vuetify'
 import { library } from '@fortawesome/fontawesome-svg-core'
 
 /* import specific icons */
-import { faTrainSubway, faBus, faCircleQuestion, faTrainTram, faArrowRight } from '@fortawesome/free-solid-svg-icons'
+import { faTrainSubway, faBus, faCircleQuestion, faTrainTram, faArrowRight, faRetweet } from '@fortawesome/free-solid-svg-icons'
 
 /* import font awesome icon component */
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
@@ -17,7 +17,7 @@ import './registerServiceWorker'
 
 
 /* add icons to the library */
-library.add(faTrainSubway, faBus, faCircleQuestion, faTrainTram, faArrowRight)
+library.add(faTrainSubway, faBus, faCircleQuestion, faTrainTram, faArrowRight, faRetweet)
 
 /* add font awesome icon component */
 Vue.component('font-awesome-icon', FontAwesomeIcon)
