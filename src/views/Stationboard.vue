@@ -4,6 +4,7 @@
     <div class="input container content">
       <v-text-field
         v-model="state.searchInput"
+        color="#262626"
         label="Search"
         placeholder="Enter Location"
         prepend-icon="mdi-map-marker"
