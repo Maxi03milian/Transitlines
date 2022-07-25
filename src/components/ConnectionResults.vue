@@ -82,7 +82,7 @@
                       ></span
                     >
                     <span>
-                      <v-dialog v-model="dialog" width="400">
+                      <v-dialog width="400">
                         <template v-slot:activator="{ on, attrs }">
                           <v-btn
                             color="grey"
