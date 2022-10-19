@@ -87,10 +87,11 @@
                           <v-btn
                             color="grey"
                             dark
+                            x-small
                             v-bind="attrs"
                             v-on="on"
                           >
-                            Passlist
+                            Station Passlist
                           </v-btn>
                         </template>
                         <v-card>
@@ -104,7 +105,8 @@
 
                           <v-card-text>
                             <v-timeline align-top dense>
-                              <v-timeline-item small color="green"><b>{{ section.journey.passList[0].station.name}}</b><br />Platform: {{section.journey.passList[0].platform}}<br />{{ getProperTime(section.journey.passList[0].departure) }}</v-timeline-item>
+                              <v-timeline-item small color="green"><b>{{ section.journey.passList[0].station.name}}</b><br />Platform: {{section.journey.passList[0].platform}}<br />{{ getProperTime(section.journey.passList[0].departure) }} <span class="delayNum" v-if="section.journey.passList[0].delay" :class="section.journey.passList[0].delay ? 'blinking' : ''">+ {{ section.journey.passList[0].delay }}</span
+                      ></v-timeline-item>
                               <v-timeline-item small v-for="stop in section.journey.passList.slice(1)" :key="stop.station.id" :color="stop.station.name == section.arrival.station.name  ? 'green' : 'grey'"> <b>{{ stop.station.name }}</b><br />{{ getProperTime(stop.arrival)}}               
                                 <span
                                   class="delayNum blinking"
