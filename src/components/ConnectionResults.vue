@@ -244,6 +244,7 @@ export default {
     saveConnection(index) {
       //save the search params to local storage and select the choosen connection
       console.log(this.currentSearch);
+      //localStorage.setItem("currentSearch", this.currentSearch);
     },
   },
 };
