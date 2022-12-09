@@ -136,7 +136,7 @@
       >
     </div>
     <div class="content" v-if="state.connections != null && !this.loading">
-      <ConnectionResults :connections="state.connections" />
+      <ConnectionResults :connections="state.connections"  :currentSearch="getCurrentSearchParams()"/>
     </div>
   </div>
 </template>
@@ -218,6 +218,7 @@ export default {
         "&bike=" +
         +state.routeOptions.bike;
       this.loading = true;
+
       //localStorage.setItem("lastSearch", params);
 
       // Save searches for autocomplete
@@ -273,6 +274,31 @@ export default {
       const val2 = document.querySelector("#input2").value;
       document.querySelector("#input1").value = val2;
       document.querySelector("#input2").value = val1;
+    },
+    getCurrentSearchParams() {
+      let state = this.$store.state;
+      const val1 = document.querySelector("#input1").value;
+      const val2 = document.querySelector("#input2").value;
+      const val3 = document.querySelector("#input3").value;
+      const val4 = document.querySelector("#input4").value;
+
+      const params =
+        "from=" +
+        val1 +
+        "&to=" +
+        val2 +
+        "&date=" +
+        val3 +
+        "&time=" +
+        val4 +
+        "&isArrivalTime=" +
+        +state.routeOptions.isArrivalTime +
+        "&limit=" +
+        5 +
+        "&bike=" +
+        +state.routeOptions.bike;
+
+      return params;
     },
   },
 };

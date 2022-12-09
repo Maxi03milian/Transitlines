@@ -2,7 +2,7 @@
   <div>
     <v-expansion-panels>
       <v-expansion-panel
-        v-for="connection in connections.connections"
+        v-for="(connection, index) in connections.connections"
         :key="connection.from.id"
         class="connectionCard"
       >
@@ -43,6 +43,9 @@
           </div>
         </v-expansion-panel-header>
         <v-expansion-panel-content>
+          <div class="connectionInputs">
+            <v-btn elevation="2" class="saveButton" @click="saveConnection(index)">Save to Journeys</v-btn>
+          </div>
           <div
             v-for="section in connection.sections"
             :key="section.departure.station.name"
@@ -150,7 +153,8 @@
                                 <span
                                   class="delayNum blinking"
                                   v-if="stop.delay"
-                                  > + {{ stop.delay }}
+                                >
+                                  + {{ stop.delay }}
                                 </span>
                               </v-timeline-item>
                             </v-timeline>
@@ -174,7 +178,8 @@
                         class="delayNum"
                         v-if="section.arrival.delay"
                         :class="section.arrival.delay ? 'blinking' : ''"
-                        > + {{ section.arrival.delay }}</span
+                      >
+                        + {{ section.arrival.delay }}</span
                       ></span
                     >
                   </div>
@@ -199,6 +204,7 @@ export default {
   },
   props: {
     connections: Object,
+    currentSearch: String,
   },
   computed: {
     state() {
@@ -234,6 +240,10 @@ export default {
       } else {
         return "green";
       }
+    },
+    saveConnection(index) {
+      //save the search params to local storage and select the choosen connection
+      console.log(this.currentSearch);
     },
   },
 };
@@ -295,6 +305,10 @@ export default {
 
 .blinking {
   animation: blinker 1s linear infinite !important;
+}
+
+.saveButton {
+  width: 100%;
 }
 
 @keyframes blinker {
