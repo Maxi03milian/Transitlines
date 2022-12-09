@@ -96,24 +96,63 @@
                         </template>
                         <v-card>
                           <v-card-title class="text-h5 grey lighten-2">
-                          <span>
-                            {{ section.journey.category }}
-                            {{ section.journey.number }} Richtung
-                            {{ section.journey.to }}
-                          </span>
+                            <span>
+                              {{ section.journey.category }}
+                              {{ section.journey.number }} Richtung
+                              {{ section.journey.to }}
+                            </span>
                           </v-card-title>
 
                           <v-card-text>
                             <v-timeline align-top dense>
-                              <v-timeline-item small color="green"><b>{{ section.journey.passList[0].station.name}}</b><br />Platform: {{section.journey.passList[0].platform}}<br />{{ getProperTime(section.journey.passList[0].departure) }} <span class="delayNum" v-if="section.journey.passList[0].delay" :class="section.journey.passList[0].delay ? 'blinking' : ''">+ {{ section.journey.passList[0].delay }}</span
-                      ></v-timeline-item>
-                              <v-timeline-item small v-for="stop in section.journey.passList.slice(1)" :key="stop.station.id" :color="stop.station.name == section.arrival.station.name  ? 'green' : 'grey'"> <b>{{ stop.station.name }}</b><br />{{ getProperTime(stop.arrival)}}               
+                              <v-timeline-item small color="green"
+                                ><b>{{
+                                  section.journey.passList[0].station.name
+                                }}</b
+                                ><br />Platform:
+                                {{ section.journey.passList[0].platform
+                                }}<br /><span
+                                  v-if="section.journey.passList[0].departure"
+                                  >{{
+                                    getProperTime(
+                                      section.journey.passList[0].departure
+                                    )
+                                  }} </span
+                                ><span
+                                  class="delayNum"
+                                  v-if="section.journey.passList[0].delay"
+                                  :class="
+                                    section.journey.passList[0].delay
+                                      ? 'blinking'
+                                      : ''
+                                  "
+                                  >+
+                                  {{ section.journey.passList[0].delay }}</span
+                                ></v-timeline-item
+                              >
+                              <v-timeline-item
+                                small
+                                v-for="stop in section.journey.passList.slice(
+                                  1
+                                )"
+                                :key="stop.station.id"
+                                :color="
+                                  stop.station.name ==
+                                  section.arrival.station.name
+                                    ? 'green'
+                                    : 'grey'
+                                "
+                              >
+                                <b>{{ stop.station.name }}</b
+                                ><br /><span v-if="stop.arrival">{{
+                                  getProperTime(stop.arrival)
+                                }}</span>
                                 <span
                                   class="delayNum blinking"
                                   v-if="stop.delay"
-                                  >+ {{ stop.delay }}
-                                </span>     
-                            </v-timeline-item>
+                                  > + {{ stop.delay }}
+                                </span>
+                              </v-timeline-item>
                             </v-timeline>
                           </v-card-text>
                         </v-card>
@@ -129,13 +168,13 @@
                   <br />
                   <div class="journeyDetails">
                     <span>Platform: {{ section.arrival.platform }}</span>
-                    <span
+                    <span v-if="section.arrival.arrival"
                       >{{ getProperTime(section.arrival.arrival) }}
                       <span
                         class="delayNum"
                         v-if="section.arrival.delay"
                         :class="section.arrival.delay ? 'blinking' : ''"
-                        >+ {{ section.arrival.delay }}</span
+                        > + {{ section.arrival.delay }}</span
                       ></span
                     >
                   </div>
