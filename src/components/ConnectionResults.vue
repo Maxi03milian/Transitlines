@@ -44,7 +44,12 @@
         </v-expansion-panel-header>
         <v-expansion-panel-content>
           <div class="connectionInputs">
-            <v-btn elevation="2" class="saveButton" @click="saveConnection(index)">Save to Journeys</v-btn>
+            <v-btn
+              elevation="2"
+              class="saveButton"
+              @click="saveConnection(index)"
+              >Save to Journeys</v-btn
+            >
           </div>
           <div
             v-for="section in connection.sections"
@@ -196,9 +201,9 @@
 </template>
 
 <script>
-import FlexibleIcon from "../components/FlexibleIcon";
+import FlexibleIcon from '../components/FlexibleIcon';
 export default {
-  name: "ConnectionResults",
+  name: 'ConnectionResults',
   components: {
     FlexibleIcon,
   },
@@ -218,33 +223,42 @@ export default {
     getProperLength(time) {
       let hours = time.substr(3, 2);
       let minutes = time.substr(6, 2);
-      let output = "";
-      if (hours != "00") {
-        var number = hours.replace(/^0+/, "");
-        output += number + "h and ";
+      let output = '';
+      if (hours != '00') {
+        var number = hours.replace(/^0+/, '');
+        output += number + 'h and ';
       }
-      if (minutes != "00") {
-        var number = minutes.replace(/^0+/, "");
-        output += number + " min";
+      if (minutes != '00') {
+        var number = minutes.replace(/^0+/, '');
+        output += number + ' min';
         return output;
       } else {
-        let newoutput = output.replace(" and ", "");
+        let newoutput = output.replace(' and ', '');
         return newoutput;
       }
     },
     getDelayColor(delay) {
       if (delay > 3) {
-        return "red";
+        return 'red';
       } else if (delay > 0) {
-        return "orange";
+        return 'orange';
       } else {
-        return "green";
+        return 'green';
       }
     },
     saveConnection(index) {
-      //save the search params to local storage and select the choosen connection
-      console.log(this.currentSearch);
-      //localStorage.setItem("currentSearch", this.currentSearch);
+      if (localStorage.getItem('savedConnections') === null) {
+        localStorage.setItem('savedConnections', JSON.stringify([]));
+      }
+      let connection = 'index=' + index + '&' + this.currentSearch;
+      let savedConnections = JSON.parse(
+        localStorage.getItem('savedConnections')
+      );
+      savedConnections.push(connection);
+      localStorage.setItem(
+        'savedConnections',
+        JSON.stringify(savedConnections)
+      );
     },
   },
 };
@@ -273,7 +287,7 @@ export default {
 
 .timelineDots {
   position: absolute;
-  width: 204px;
+  width: calc(100% - 10rem);
   display: flex;
   justify-content: space-around;
 }

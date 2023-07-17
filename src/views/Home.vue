@@ -16,29 +16,75 @@
         text="Look up all upcoming connections on a specific station"
         link="/stationboard"
       />
-      <br>
-      <div class="title">
-        <h2>Journeys</h2>
+      <div v-if="!noSavedConnections" class="savedJourneys">
+        <div class="title">
+          <h2>Journeys</h2>
+        </div>
+        <p>Saved Trips</p>
+        <div v-if="!loadingSaved">
+          <SavedConnections :connections="savedConnectionEntities" />
+        </div>
+        <div v-else class="loadingSaved">
+          <v-progress-circular
+            indeterminate
+            color="black"
+          ></v-progress-circular>
+        </div>
       </div>
-      <p>Saved Trips</p>
     </div>
   </div>
 </template>
 
 <script>
-import Header from "../components/Header";
-import Navcard from "../components/Navcard";
+import Header from '../components/Header';
+import Navcard from '../components/Navcard';
+import SavedConnections from '../components/SavedConnections';
 
 export default {
-  name: "Home",
-
+  name: 'Home',
+  data() {
+    return {
+      loadingSaved: false,
+      noSavedConnections: false,
+      savedConnectionEntities: [],
+    };
+  },
+  mounted() {
+    if (localStorage.getItem('savedConnections') == null) {
+      this.noSavedConnections = true;
+      return;
+    }
+    this.loadingSaved = true;
+    const connections = JSON.parse(
+      localStorage.getItem('savedConnections').split(',')
+    );
+    connections.forEach((element) => {
+      const params = element.split('&');
+      params.shift();
+      const newParams = params.join('&');
+      fetch('https://transport.opendata.ch/v1/connections?' + newParams)
+        .then((res) => res.json())
+        .then((data) => {
+          this.savedConnectionEntities.push(
+            data.connections[element.split('&')[0].split('=')[1]]
+          );
+          if (connections.length === this.savedConnectionEntities.length) {
+            this.loadingSaved = false;
+          }
+        });
+    });
+  },
   components: {
     Header,
     Navcard,
+    SavedConnections,
   },
   computed: {
     state() {
       return this.$store.state;
+    },
+    savedConnections() {
+      return localStorage.getItem('savedConnections');
     },
   },
   methods: {},
@@ -50,7 +96,18 @@ export default {
   padding-left: 20px;
   padding-right: 20px;
 }
-.container{
-    margin-top: 4rem;
+.container {
+  margin-top: 4rem;
+}
+
+.savedJourneys {
+  margin-top: 2rem;
+}
+
+.loadingSaved {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100px;
 }
 </style>

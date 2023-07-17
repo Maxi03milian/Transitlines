@@ -136,17 +136,20 @@
       >
     </div>
     <div class="content" v-if="state.connections != null && !this.loading">
-      <ConnectionResults :connections="state.connections"  :currentSearch="getCurrentSearchParams()"/>
+      <ConnectionResults
+        :connections="state.connections"
+        :currentSearch="getCurrentSearchParams()"
+      />
     </div>
   </div>
 </template>
 
 <script>
-import Header from "../components/Header";
-import ConnectionResults from "../components/ConnectionResults";
+import Header from '../components/Header';
+import ConnectionResults from '../components/ConnectionResults';
 
 export default {
-  name: "Stationboard",
+  name: 'Stationboard',
   data() {
     return {
       loading: false,
@@ -165,11 +168,11 @@ export default {
       return this.$store.state;
     },
     existingSearch() {
-      return JSON.parse(localStorage.getItem("prevLocations")).reverse();
+      return JSON.parse(localStorage.getItem('prevLocations')).reverse();
     },
     isSearching1() {
       if (
-        (localStorage.getItem("prevLocations") != null &&
+        (localStorage.getItem('prevLocations') != null &&
           !this.$store.state.fromStations.stations) ||
         (this.$store.state.fromStations.stations != undefined
           ? this.$store.state.fromStations.stations.length == 0
@@ -182,7 +185,7 @@ export default {
     },
     isSearching2() {
       if (
-        (localStorage.getItem("prevLocations") != null &&
+        (localStorage.getItem('prevLocations') != null &&
           !this.$store.state.toStations.stations) ||
         (this.$store.state.toStations.stations != undefined
           ? this.$store.state.toStations.stations.length == 0
@@ -197,39 +200,42 @@ export default {
   methods: {
     search() {
       let state = this.$store.state;
-      const val1 = document.querySelector("#input1").value;
-      const val2 = document.querySelector("#input2").value;
-      const val3 = document.querySelector("#input3").value;
-      const val4 = document.querySelector("#input4").value;
+      const val1 = document.querySelector('#input1').value;
+      const val2 = document.querySelector('#input2').value;
+      const val3 = document.querySelector('#input3').value;
+      const val4 = document.querySelector('#input4').value;
 
       const params =
-        "from=" +
+        'from=' +
         val1 +
-        "&to=" +
+        '&to=' +
         val2 +
-        "&date=" +
+        '&date=' +
         val3 +
-        "&time=" +
+        '&time=' +
         val4 +
-        "&isArrivalTime=" +
+        '&isArrivalTime=' +
         +state.routeOptions.isArrivalTime +
-        "&limit=" +
+        '&limit=' +
         5 +
-        "&bike=" +
+        '&bike=' +
         +state.routeOptions.bike;
       this.loading = true;
 
       //localStorage.setItem("lastSearch", params);
 
       // Save searches for autocomplete
-      if (val1 != "" && val2 != "") {
+      if (val1 != '' && val2 != '') {
         let existingEntries;
-        if (localStorage.getItem("prevLocations") != null) {
-          existingEntries = JSON.parse(localStorage.getItem("prevLocations"));
+        if (localStorage.getItem('prevLocations') != null) {
+          existingEntries = JSON.parse(localStorage.getItem('prevLocations'));
         } else {
           existingEntries = [];
         }
         if (!existingEntries.includes(val1)) {
+          if (existingEntries.length > 5) {
+            existingEntries.splice(0, 1);
+          }
           existingEntries.push(val1);
         } else {
           existingEntries.push(
@@ -237,65 +243,68 @@ export default {
           );
         }
         if (!existingEntries.includes(val2)) {
+          if (existingEntries.length > 5) {
+            existingEntries.splice(0, 1);
+          }
           existingEntries.push(val2);
         } else {
           existingEntries.push(
             existingEntries.splice(existingEntries.indexOf(val2), 1)[0]
           );
         }
-        localStorage.setItem("prevLocations", JSON.stringify(existingEntries));
+        localStorage.setItem('prevLocations', JSON.stringify(existingEntries));
       }
 
-      fetch("https://transport.opendata.ch/v1/connections?" + params)
+      fetch('https://transport.opendata.ch/v1/connections?' + params)
         .then((res) => res.json())
         .then((data) => {
-          this.$store.commit("updateConnections", data);
+          this.$store.commit('updateConnections', data);
           this.loading = false;
         });
     },
     fromOptions(e) {
-      let params = "query=" + e.target.value;
-      fetch("https://transport.opendata.ch/v1/locations?" + params)
+      let params = 'query=' + e.target.value;
+      fetch('https://transport.opendata.ch/v1/locations?' + params)
         .then((res) => res.json())
         .then((data) => {
-          this.$store.commit("updateFromStations", data);
+          this.$store.commit('updateFromStations', data);
         });
     },
     toOptions(e) {
-      let params = "query=" + e.target.value;
-      fetch("https://transport.opendata.ch/v1/locations?" + params)
+      let params = 'query=' + e.target.value;
+      fetch('https://transport.opendata.ch/v1/locations?' + params)
         .then((res) => res.json())
         .then((data) => {
-          this.$store.commit("updateToStations", data);
+          this.$store.commit('updateToStations', data);
         });
     },
     swapSearch() {
-      const val1 = document.querySelector("#input1").value;
-      const val2 = document.querySelector("#input2").value;
-      document.querySelector("#input1").value = val2;
-      document.querySelector("#input2").value = val1;
+      const val1 = document.querySelector('#input1').value;
+      const val2 = document.querySelector('#input2').value;
+      document.querySelector('#input1').value = val2;
+      document.querySelector('#input2').value = val1;
     },
     getCurrentSearchParams() {
       let state = this.$store.state;
-      const val1 = document.querySelector("#input1").value;
-      const val2 = document.querySelector("#input2").value;
-      const val3 = document.querySelector("#input3").value;
-      const val4 = document.querySelector("#input4").value;
+      const val1 = document.querySelector('#input1').value;
+      const val2 = document.querySelector('#input2').value;
+      const val3 = document.querySelector('#input3').value;
+      const val4 = document.querySelector('#input4').value;
 
       const params =
-        "from=" +
+        'from=' +
         val1 +
-        "&to=" +
+        '&to=' +
         val2 +
-        "&date=" +
+        '&date=' +
         val3 +
-        "&time=" +
+        '&time=' +
         val4 +
-        "&isArrivalTime=" +
+        '&isArrivalTime=' +
         +state.routeOptions.isArrivalTime +
-        "&limit=" +
+        '&limit=' +
         5 +
-        "&bike=" +
+        '&bike=' +
         +state.routeOptions.bike;
 
       return params;
