@@ -147,7 +147,7 @@ export default {
       const now = new Date();
       const departure = new Date(time);
       const diff = departure - now;
-      const minutes = Math.floor(diff / 1000 / 60);
+      const minutes = Math.floor(diff / 1000 / 60) + 1;
       let hours = Math.floor(minutes / 60);
       let remainingMinutes = minutes % 60;
       if (pasttime) {
@@ -155,21 +155,21 @@ export default {
         remainingMinutes = remainingMinutes * -1;
       }
 
-      if (hours === 1 && minutes === 1) {
-        return `in ${hours} hour and ${remainingMinutes} minute`;
-      } else if (hours === 1) {
-        return `in ${hours} hour and ${remainingMinutes} minutes`;
-      } else if (minutes === 1) {
-        return `in ${hours} hours and ${remainingMinutes} minute`;
-      } else if (hours === 0 && minutes === 0) {
+      if (hours === 0 && minutes === 0) {
         return 'now';
-      } else if (hours === 0) {
-        return `in ${remainingMinutes} minutes`;
-      } else if (minutes === 0) {
-        return `in ${hours} hours`;
-      } else {
-        return `in ${hours} hours and ${remainingMinutes} minutes`;
       }
+
+      let timeString = '';
+
+      if (hours !== 0) {
+        timeString += `${hours} hour${hours === 1 ? '' : 's'}`;
+      }
+
+      if (minutes !== 0) {
+        timeString += ` ${minutes} minute${minutes === 1 ? '' : 's'}`;
+      }
+
+      return `in ${timeString}`;
     },
     isRemainingTimeAhead(time) {
       const now = new Date();
