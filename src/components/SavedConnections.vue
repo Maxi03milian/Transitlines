@@ -79,7 +79,7 @@
                 To {{ connection.nextSection.journey.to }}<br />
               </span>
               <span>
-                departs in
+                departing
                 {{
                   getRemainingTime(
                     connection.nextSection.departure.departure,
@@ -110,7 +110,7 @@ export default {
   computed: {
     processedConnections() {
       return this.connections.map((connection) => {
-        const nextSection = this.nextConnection(connection.sections);
+        const nextSection = this.nextSection(connection.sections);
         return { ...connection, nextSection };
       });
     },
@@ -156,17 +156,19 @@ export default {
       }
 
       if (hours === 1 && minutes === 1) {
-        return `${hours} hour and ${remainingMinutes} minute`;
+        return `in ${hours} hour and ${remainingMinutes} minute`;
       } else if (hours === 1) {
-        return `${hours} hour and ${remainingMinutes} minutes`;
+        return `in ${hours} hour and ${remainingMinutes} minutes`;
       } else if (minutes === 1) {
-        return `${hours} hours and ${remainingMinutes} minute`;
+        return `in ${hours} hours and ${remainingMinutes} minute`;
+      } else if (hours === 0 && minutes === 0) {
+        return 'now';
       } else if (hours === 0) {
-        return `${remainingMinutes} minutes`;
+        return `in ${remainingMinutes} minutes`;
       } else if (minutes === 0) {
-        return `${hours} hours`;
+        return `in ${hours} hours`;
       } else {
-        return `${hours} hours and ${remainingMinutes} minutes`;
+        return `in ${hours} hours and ${remainingMinutes} minutes`;
       }
     },
     isRemainingTimeAhead(time) {
@@ -228,11 +230,16 @@ export default {
         };
       }
     },
-    nextConnection(sections) {
+    nextSection(sections) {
       let nextSection = null;
       let now = new Date();
       sections.forEach((section) => {
         let departure = new Date(section.departure.departure);
+        if (section.departure.delay) {
+          departure.setMinutes(
+            departure.getMinutes() + section.departure.delay
+          );
+        }
         if (departure > now) {
           nextSection ? null : (nextSection = section);
         }
