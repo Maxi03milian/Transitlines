@@ -234,6 +234,7 @@ export default {
       let nextSection = null;
       let now = new Date();
       sections.forEach((section) => {
+        if (!section.journey) return;
         let departure = new Date(section.departure.departure);
         if (section.departure.delay) {
           departure.setMinutes(
