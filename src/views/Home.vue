@@ -73,6 +73,7 @@ export default {
           }
         });
     });
+    this.startTimer();
   },
   components: {
     Header,
@@ -87,7 +88,46 @@ export default {
       return localStorage.getItem('savedConnections');
     },
   },
-  methods: {},
+  methods: {
+    startTimer() {
+      const now = new Date();
+      const remainingMilliseconds = (60 - now.getSeconds()) * 1000;
+
+      const executeFunction = () => {
+        this.updateData();
+        // Schedule the next execution
+        setTimeout(executeFunction, 60000);
+      };
+
+      setTimeout(executeFunction, remainingMilliseconds);
+    },
+    updateData() {
+      const connections = JSON.parse(
+        localStorage.getItem('savedConnections').split(',')
+      );
+      const promises = connections.map((element) => {
+        const params = element.split('&');
+        params.shift();
+        const newParams = params.join('&');
+        return fetch(
+          'https://transport.opendata.ch/v1/connections?' + newParams
+        )
+          .then((res) => res.json())
+          .then(
+            (data) => data.connections[element.split('&')[0].split('=')[1]]
+          );
+      });
+
+      Promise.all(promises)
+        .then((results) => {
+          this.savedConnectionEntities = results;
+        })
+        .catch((error) => {
+          // Handle any errors that occurred during fetch requests
+          console.error(error);
+        });
+    },
+  },
 };
 </script>
 

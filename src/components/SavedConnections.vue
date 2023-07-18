@@ -1,6 +1,9 @@
 <template>
   <div>
-    <div v-for="(connection, index) in connections" :key="connection.id">
+    <div
+      v-for="(connection, index) in processedConnections"
+      :key="connection.id"
+    >
       <v-card class="connectionCard" elevation="5" outlined shaped tile>
         <div class="cardTitle">
           <div class="cardTitleText">
@@ -65,24 +68,30 @@
               </div>
             </span>
           </div>
-          Next up:
-          <div>
-            <b>{{ connection.products[0] }}</b> To
-            <span v-if="connection.sections[0].journey">{{
-              connection.sections[0].journey.to
-            }}</span>
-            <span v-else>{{ connection.sections[1].journey.to }}</span>
+          <div v-if="connection.nextSection">
+            Next up:
+            <div v-if="connection.nextSection.journey">
+              <span>
+                <b
+                  >{{ connection.nextSection.journey.category
+                  }}{{ connection.nextSection.journey.number }}</b
+                >
+                To {{ connection.nextSection.journey.to }}<br />
+              </span>
+              <span>
+                departs in
+                {{
+                  getRemainingTime(
+                    connection.nextSection.departure.departure,
+                    false
+                  )
+                }}
+                from
+                {{ connection.nextSection.journey.passList[0].station.name }}
+              </span>
+            </div>
+            <div v-else>walk you bitch</div>
           </div>
-          <span v-if="isRemainingTimeAhead(connection.from.departure)">
-            departs in
-            {{ getRemainingTime(connection.from.departure, false) }} from
-            {{ connection.from.station.name }}
-          </span>
-          <span v-else>
-            departed
-            {{ getRemainingTime(connection.from.departure, true) }} ago from
-            {{ connection.from.station.name }}
-          </span>
         </div>
       </v-card>
     </div>
@@ -96,6 +105,14 @@ export default {
     connections: {
       type: Array,
       required: true,
+    },
+  },
+  computed: {
+    processedConnections() {
+      return this.connections.map((connection) => {
+        const nextSection = this.nextConnection(connection.sections);
+        return { ...connection, nextSection };
+      });
     },
   },
   methods: {
@@ -210,6 +227,17 @@ export default {
           text: 'This route contains minor delays',
         };
       }
+    },
+    nextConnection(sections) {
+      let nextSection = null;
+      let now = new Date();
+      sections.forEach((section) => {
+        let departure = new Date(section.departure.departure);
+        if (departure > now) {
+          nextSection ? null : (nextSection = section);
+        }
+      });
+      return nextSection;
     },
   },
 };
