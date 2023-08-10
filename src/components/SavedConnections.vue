@@ -4,7 +4,15 @@
       v-for="(connection, index) in processedConnections"
       :key="connection.id"
     >
-      <v-card class="connectionCard" elevation="5" outlined shaped tile>
+      <v-card
+        class="connectionCard"
+        elevation="5"
+        outlined
+        shaped
+        tile
+        :loading="isTransitNow(connection) ? hasIssues(connection).color : null"
+        @click.stop="openDialog(connection)"
+      >
         <div class="cardTitle">
           <div class="cardTitleText">
             <b>
@@ -68,8 +76,8 @@
               </div>
             </span>
           </div>
-          <div v-if="connection.nextSection">
-            Next up:
+          <div v-if="connection.nextSection" class="nextSectionInfo">
+            Up Next:
             <div v-if="connection.nextSection.journey">
               <span>
                 <b
@@ -83,6 +91,7 @@
                 {{
                   getRemainingTime(
                     connection.nextSection.departure.departure,
+                    connection.nextSection.departure.delay,
                     false
                   )
                 }}
@@ -95,12 +104,107 @@
         </div>
       </v-card>
     </div>
+    <!--Details dialog-->
+    <v-dialog
+      v-if="this.viewingConnection"
+      v-model="dialog"
+      fullscreen
+      hide-overlay
+      transition="dialog-bottom-transition"
+    >
+      <v-card
+        :loading="
+          isTransitNow(this.viewingConnection)
+            ? hasIssues(this.viewingConnection).color
+            : null
+        "
+      >
+        <v-toolbar dark :color="'#262626'">
+          <v-btn icon dark @click="closeDialog()">
+            <v-icon>mdi-close</v-icon>
+          </v-btn>
+          <v-toolbar-title>
+            <b> To {{ this.viewingConnection.to.station.name }} </b>
+          </v-toolbar-title>
+          <v-spacer></v-spacer>
+          <v-toolbar-items>
+            <v-icon
+              v-if="hasIssues(this.viewingConnection).hasIssue"
+              :color="hasIssues(this.viewingConnection).color"
+              v-bind="attrs"
+              v-on="on"
+              >mdi-alert-box
+            </v-icon>
+          </v-toolbar-items>
+        </v-toolbar>
+        <v-list three-line subheader>
+          <v-subheader>Overview</v-subheader>
+          <div class="detailLineOverview">
+            <p>Currently ON TIME</p>
+          </div>
+          <v-list-item>
+            <v-list-item-content>
+              <v-list-item-title>Password</v-list-item-title>
+              <v-list-item-subtitle
+                >Require password for purchase or use password to restrict
+                purchase</v-list-item-subtitle
+              >
+            </v-list-item-content>
+          </v-list-item>
+        </v-list>
+        <v-divider></v-divider>
+        <v-list three-line subheader>
+          <v-subheader>General</v-subheader>
+          <v-list-item>
+            <v-list-item-action>
+              <v-checkbox></v-checkbox>
+            </v-list-item-action>
+            <v-list-item-content>
+              <v-list-item-title>Notifications</v-list-item-title>
+              <v-list-item-subtitle
+                >Notify me about updates to apps or games that I
+                downloaded</v-list-item-subtitle
+              >
+            </v-list-item-content>
+          </v-list-item>
+          <v-list-item>
+            <v-list-item-action>
+              <v-checkbox></v-checkbox>
+            </v-list-item-action>
+            <v-list-item-content>
+              <v-list-item-title>Sound</v-list-item-title>
+              <v-list-item-subtitle
+                >Auto-update apps at any time. Data charges may
+                apply</v-list-item-subtitle
+              >
+            </v-list-item-content>
+          </v-list-item>
+          <v-list-item>
+            <v-list-item-action>
+              <v-checkbox></v-checkbox>
+            </v-list-item-action>
+            <v-list-item-content>
+              <v-list-item-title>Auto-add widgets</v-list-item-title>
+              <v-list-item-subtitle
+                >Automatically add home screen widgets</v-list-item-subtitle
+              >
+            </v-list-item-content>
+          </v-list-item>
+        </v-list>
+      </v-card>
+    </v-dialog>
   </div>
 </template>
 
 <script>
 export default {
-  name: 'SavedConnections',
+  name: "SavedConnections",
+  data() {
+    return {
+      dialog: false,
+      viewingConnection: undefined,
+    };
+  },
   props: {
     connections: {
       type: Array,
@@ -116,16 +220,23 @@ export default {
     },
   },
   methods: {
+    openDialog(connection) {
+      this.viewingConnection = connection;
+      this.dialog = true;
+    },
+    closeDialog() {
+      this.dialog = false;
+    },
     removeConnection(key) {
       const savedConnections = JSON.parse(
-        localStorage.getItem('savedConnections').split(',')
+        localStorage.getItem("savedConnections").split(",")
       );
       savedConnections.splice(key, 1);
       if (savedConnections.length == 0) {
-        localStorage.removeItem('savedConnections');
+        localStorage.removeItem("savedConnections");
       } else {
         localStorage.setItem(
-          'savedConnections',
+          "savedConnections",
           JSON.stringify(savedConnections)
         );
       }
@@ -136,16 +247,17 @@ export default {
       let hours = date.getHours();
       let minutes = date.getMinutes();
       if (hours < 10) {
-        hours = '0' + hours;
+        hours = "0" + hours;
       }
       if (minutes < 10) {
-        minutes = '0' + minutes;
+        minutes = "0" + minutes;
       }
-      return hours + ':' + minutes;
+      return hours + ":" + minutes;
     },
-    getRemainingTime(time, pasttime) {
+    getRemainingTime(time, delay, pasttime) {
       const now = new Date();
       const departure = new Date(time);
+      if (delay) departure.setMinutes(departure.getMinutes() + parseInt(delay));
       const diff = departure - now;
       const minutes = Math.floor(diff / 1000 / 60) + 1;
       let hours = Math.floor(minutes / 60);
@@ -155,19 +267,25 @@ export default {
         remainingMinutes = remainingMinutes * -1;
       }
 
-      if (hours === 0 && minutes === 0) {
-        return 'now';
+      if (hours === 0 && remainingMinutes === 0) {
+        return "now";
       }
 
-      let timeString = '';
+      let timeString = "";
 
       if (hours !== 0) {
-        timeString += `${hours} hour${hours === 1 ? '' : 's'}`;
+        timeString += `${hours} hour${hours === 1 ? "" : "s"}`;
       }
 
-      if (minutes !== 0) {
-        timeString += ` ${minutes} minute${minutes === 1 ? '' : 's'}`;
+      if (remainingMinutes !== 0) {
+        if (hours !== 0) {
+          timeString += " and";
+        }
+        timeString += ` ${remainingMinutes} minute${
+          remainingMinutes === 1 ? "" : "s"
+        }`;
       }
+      if (delay) timeString += ` (delayed by ${delay} minutes)`;
 
       return `in ${timeString}`;
     },
@@ -178,6 +296,17 @@ export default {
       const minutes = Math.floor(diff / 1000 / 60);
       return minutes > 0;
     },
+    isTransitNow(connection) {
+      const now = new Date();
+      const departure = new Date(connection.from.departure);
+      const arrival = new Date(connection.to.arrival);
+      if (connection.to.arrival.delay) {
+        arrival.setMinutes(
+          arrival.getMinutes() + parseInt(connection.to.arrival.delay)
+        );
+      }
+      return now > departure && now < arrival;
+    },
     getOnlyTransportSections(sections) {
       return sections.filter(function (section) {
         return section.journey !== null;
@@ -185,17 +314,17 @@ export default {
     },
     getTransportIcon(category) {
       switch (category) {
-        case 'IC':
-        case 'IR':
-          return 'mdi-train';
-        case 'S':
-          return 'mdi-subway-variant';
-        case 'B':
-          return 'mdi-bus';
-        case 'T':
-          return 'mdi-tram';
+        case "IC":
+        case "IR":
+          return "mdi-train";
+        case "S":
+          return "mdi-subway-variant";
+        case "B":
+          return "mdi-bus";
+        case "T":
+          return "mdi-tram";
         default:
-          return 'mdi-help-circle';
+          return "mdi-help-circle";
       }
     },
     hasIssues(connection) {
@@ -212,21 +341,21 @@ export default {
       if (!lineHasIssue) {
         return {
           hasIssue: false,
-          color: 'green',
-          text: 'No issues',
+          color: "green",
+          text: "No issues",
         };
       }
       if (biggestDelay > 3) {
         return {
           hasIssue: true,
-          color: 'red',
-          text: 'This route contains major delays',
+          color: "red",
+          text: "This route contains major delays",
         };
       } else {
         return {
           hasIssue: true,
-          color: 'orange',
-          text: 'This route contains minor delays',
+          color: "orange",
+          text: "This route contains minor delays",
         };
       }
     },
@@ -257,10 +386,11 @@ export default {
   margin-bottom: 1rem;
   display: flex;
   flex-direction: column;
-  padding: 1rem;
+  padding: 0rem 1rem 1rem 1rem;
 }
 
 .cardTitle {
+  padding-top: 1rem;
   display: flex;
   flex-direction: row;
   justify-content: space-between;
@@ -312,5 +442,12 @@ export default {
 
 .typeIcon {
   margin-top: -3px;
+}
+
+.nextSectionInfo {
+  margin-top: 0.2rem;
+}
+.detailLineOverview {
+  padding: 0 16px;
 }
 </style>
