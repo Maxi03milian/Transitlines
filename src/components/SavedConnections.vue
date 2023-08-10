@@ -123,19 +123,14 @@
           <v-btn icon dark @click="closeDialog()">
             <v-icon>mdi-close</v-icon>
           </v-btn>
-          <v-toolbar-title>
-            <b> To {{ this.viewingConnection.to.station.name }} </b>
+          <v-toolbar-title class="toolbarTitleContainer">
+            <span class="toolbarTitleSmall"
+              >{{ this.viewingConnection.from.station.name }} --></span
+            >
+            <span class="toolbarTitleBig">
+              <b> {{ this.viewingConnection.to.station.name }} </b></span
+            >
           </v-toolbar-title>
-          <v-spacer></v-spacer>
-          <v-toolbar-items>
-            <v-icon
-              v-if="hasIssues(this.viewingConnection).hasIssue"
-              :color="hasIssues(this.viewingConnection).color"
-              v-bind="attrs"
-              v-on="on"
-              >mdi-alert-box
-            </v-icon>
-          </v-toolbar-items>
         </v-toolbar>
         <v-list three-line subheader>
           <v-subheader>Overview</v-subheader>
@@ -449,5 +444,20 @@ export default {
 }
 .detailLineOverview {
   padding: 0 16px;
+}
+
+.toolbarTitleSmall {
+  font-size: 0.7rem;
+  font-weight: 500;
+}
+
+.toolbarTitleSmall::after {
+  content: "\a";
+  white-space: pre;
+}
+
+.toolbarTitleContainer{
+  line-height: 80%;
+  height: 100%;
 }
 </style>
