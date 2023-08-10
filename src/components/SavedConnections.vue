@@ -457,7 +457,7 @@ export default {
 }
 
 .toolbarTitleContainer{
-  line-height: 80%;
+  line-height: 100%;
   height: 100%;
 }
 </style>
