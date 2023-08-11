@@ -280,7 +280,7 @@ export default {
           remainingMinutes === 1 ? "" : "s"
         }`;
       }
-      if (delay) timeString += ` (delayed by ${delay} minutes)`;
+      if (delay) timeString += ` (delayed by ${delay} ${delay === 1 ? 'minute' : 'minutes'})`;
 
       return `in ${timeString}`;
     },
