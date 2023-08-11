@@ -33,7 +33,7 @@
               </template>
               <span>{{ hasIssues(connection).text }}</span>
             </v-tooltip>
-            <v-btn icon @click="removeConnection(index)">
+            <v-btn icon @click.stop="removeConnection(index)">
               <v-icon>mdi-delete</v-icon></v-btn
             >
           </div>
