@@ -96,7 +96,7 @@
                   )
                 }}
                 from
-                {{ connection.nextSection.journey.passList[0].station.name }}
+                {{ connection.nextSection.departure.station.name }}
               </span>
             </div>
             <div v-else>walk you bitch</div>
@@ -135,15 +135,96 @@
         <v-list three-line subheader>
           <v-subheader>Overview</v-subheader>
           <div class="detailLineOverview">
-            <p>Currently ON TIME</p>
+            <div class="detailLineTimeline">
+              <span class="departure">{{
+                getProperTime(this.viewingConnection.from.departure)
+              }}</span>
+              <span class="detailLine">
+                <div
+                  class="sections"
+                  v-for="section in this.viewingConnection.sections.filter(section => section.journey)"
+                  :key="section.departure.station.name"
+                  :class="{ 'pulsing': isCurrentSection(section) }"
+                >
+                  <div>
+                    <v-icon small color="black" class="typeIcon">{{getTransportIcon(section.journey.category)}}</v-icon>
+                  </div>
+                  <span class="sectionItem"></span>
+                  <span
+                    >{{ section.journey.category
+                    }}{{ section.journey.number }}</span
+                  >
+                </div> 
+              </span>
+              <span class="arrival">{{
+                getProperTime(this.viewingConnection.to.arrival)
+              }}</span>
+            </div>
           </div>
-          <v-list-item>
+          <v-list-item v-if="this.viewingConnection.currentSection">
             <v-list-item-content>
-              <v-list-item-title>Password</v-list-item-title>
-              <v-list-item-subtitle
-                >Require password for purchase or use password to restrict
-                purchase</v-list-item-subtitle
-              >
+              <v-list-item-title>Current connection</v-list-item-title>
+                <div class="nextSectionInfo">
+                  <div v-if="this.viewingConnection.currentSection.journey">
+                    <v-list-item-subtitle>
+                        <b
+                          >{{ this.viewingConnection.currentSection.journey.category
+                          }}{{ this.viewingConnection.currentSection.journey.number }}</b
+                        >
+                        To {{ this.viewingConnection.currentSection.journey.to }}
+                      </v-list-item-subtitle>
+                      <v-list-item-subtitle>
+                        arriving
+                        {{
+                          getRemainingTime(
+                            this.viewingConnection.currentSection.arrival.arrival,
+                            this.viewingConnection.currentSection.arrival.delay,
+                            false
+                          )
+                        }}
+                        at
+                        {{ this.viewingConnection.currentSection.arrival.station.name}}
+                      </v-list-item-subtitle>
+                      <v-list-item-subtitle v-if="this.viewingConnection.currentSection.arrival.platform">
+                        Platform
+                        {{ this.viewingConnection.currentSection.arrival.platform}}
+                      </v-list-item-subtitle>
+                  </div>
+                  <div v-else>walk you bitch</div>
+                </div>
+            </v-list-item-content>
+          </v-list-item>
+          <v-list-item v-if="this.viewingConnection.nextSection" >
+            <v-list-item-content>
+              <v-list-item-title>Up Next</v-list-item-title>
+                <div class="nextSectionInfo">
+                  <div v-if="this.viewingConnection.nextSection.journey">
+                    <v-list-item-subtitle>
+                        <b
+                          >{{ this.viewingConnection.nextSection.journey.category
+                          }}{{ this.viewingConnection.nextSection.journey.number }}</b
+                        >
+                        To {{ this.viewingConnection.nextSection.journey.to }}
+                      </v-list-item-subtitle>
+                      <v-list-item-subtitle>
+                        departing
+                        {{
+                          getRemainingTime(
+                            this.viewingConnection.nextSection.departure.departure,
+                            this.viewingConnection.nextSection.departure.delay,
+                            false
+                          )
+                        }}
+                        from
+                        {{ this.viewingConnection.nextSection.departure.station.name }}
+                      </v-list-item-subtitle>
+                      <v-list-item-subtitle v-if="this.viewingConnection.nextSection.departure.platform">
+                        Platform
+                        {{ this.viewingConnection.nextSection.departure.platform}}
+                      </v-list-item-subtitle>
+                  </div>
+                  <div v-else>walk you bitch</div>
+                </div>
             </v-list-item-content>
           </v-list-item>
         </v-list>
@@ -210,7 +291,10 @@ export default {
     processedConnections() {
       return this.connections.map((connection) => {
         const nextSection = this.nextSection(connection.sections);
-        return { ...connection, nextSection };
+        const currentSection = connection.sections.filter((section) => {
+          return this.isCurrentSection(section);
+        })[0];
+        return { ...connection, currentSection, nextSection };
       });
     },
   },
@@ -280,7 +364,10 @@ export default {
           remainingMinutes === 1 ? "" : "s"
         }`;
       }
-      if (delay) timeString += ` (delayed by ${delay} ${delay === 1 ? 'minute' : 'minutes'})`;
+      if (delay)
+        timeString += ` (delayed by ${delay} ${
+          delay === 1 ? "minute" : "minutes"
+        })`;
 
       return `in ${timeString}`;
     },
@@ -371,6 +458,22 @@ export default {
       });
       return nextSection;
     },
+    isCurrentSection(section) {
+      let now = new Date();
+      if (!section.journey) return false;
+      let departure = new Date(section.departure.departure);
+      let arrival = new Date(section.arrival.arrival);
+      if (section.departure.delay) {
+        departure.setMinutes(departure.getMinutes() + section.departure.delay);
+      }
+      if (section.arrival.delay) {
+        arrival.setMinutes(arrival.getMinutes() + parseInt(section.arrival.delay));
+      }
+      if (departure < now && now < arrival) {
+        return true;
+      }
+      return false;
+    }
   },
 };
 </script>
@@ -406,12 +509,20 @@ export default {
   margin-bottom: 0.5rem;
 }
 
+.detailLineTimeline{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
 .cardTimeline .line {
   display: flex;
   align-items: center;
+  flex-direction: row;
   width: 100%;
   margin-left: 0.5rem;
   margin-right: 0.5rem;
+  gap: 1rem;
 }
 
 .timelineDots {
@@ -446,6 +557,14 @@ export default {
   padding: 0 16px;
 }
 
+.detailLine{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  width: 100%;
+  gap: 0.5rem;
+}
+
 .toolbarTitleSmall {
   font-size: 0.7rem;
   font-weight: 500;
@@ -456,8 +575,50 @@ export default {
   white-space: pre;
 }
 
-.toolbarTitleContainer{
+.toolbarTitleContainer {
   line-height: 100%;
   height: 100%;
+}
+
+.sections{
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+.sectionItem{
+  width: 100%;
+  border: 1px solid #262626;
+}
+
+.detailLineOverview .detailLineTimeline .departure {
+  margin-right: 1rem;
+  display: flex;
+  align-items: center;
+}
+
+.detailLineOverview .detailLineTimeline .arrival {
+  margin-left: 1rem;
+  display: flex;
+  align-items: center;
+}
+
+
+.pulsing {
+  animation: pulsing 1s infinite;
+}
+
+@keyframes pulsing {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
 }
 </style>
