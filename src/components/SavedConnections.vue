@@ -142,19 +142,23 @@
               <span class="detailLine">
                 <div
                   class="sections"
-                  v-for="section in this.viewingConnection.sections.filter(section => section.journey)"
+                  v-for="section in this.viewingConnection.sections.filter(
+                    (section) => section.journey
+                  )"
                   :key="section.departure.station.name"
-                  :class="{ 'pulsing': isCurrentSection(section) }"
+                  :class="{ pulsing: isCurrentSection(section) }"
                 >
                   <div>
-                    <v-icon small color="black" class="typeIcon">{{getTransportIcon(section.journey.category)}}</v-icon>
+                    <v-icon small color="black" class="typeIcon">{{
+                      getTransportIcon(section.journey.category)
+                    }}</v-icon>
                   </div>
                   <span class="sectionItem"></span>
                   <span
                     >{{ section.journey.category
                     }}{{ section.journey.number }}</span
                   >
-                </div> 
+                </div>
               </span>
               <span class="arrival">{{
                 getProperTime(this.viewingConnection.to.arrival)
@@ -164,109 +168,155 @@
           <v-list-item v-if="this.viewingConnection.currentSection">
             <v-list-item-content>
               <v-list-item-title>Current connection</v-list-item-title>
-                <div class="nextSectionInfo">
-                  <div v-if="this.viewingConnection.currentSection.journey">
-                    <v-list-item-subtitle>
-                        <b
-                          >{{ this.viewingConnection.currentSection.journey.category
-                          }}{{ this.viewingConnection.currentSection.journey.number }}</b
-                        >
-                        To {{ this.viewingConnection.currentSection.journey.to }}
-                      </v-list-item-subtitle>
-                      <v-list-item-subtitle>
-                        arriving
-                        {{
-                          getRemainingTime(
-                            this.viewingConnection.currentSection.arrival.arrival,
-                            this.viewingConnection.currentSection.arrival.delay,
-                            false
-                          )
-                        }}
-                        at
-                        {{ this.viewingConnection.currentSection.arrival.station.name}}
-                      </v-list-item-subtitle>
-                      <v-list-item-subtitle v-if="this.viewingConnection.currentSection.arrival.platform">
-                        Platform
-                        {{ this.viewingConnection.currentSection.arrival.platform}}
-                      </v-list-item-subtitle>
-                  </div>
-                  <div v-else>walk you bitch</div>
+              <div class="nextSectionInfo">
+                <div v-if="this.viewingConnection.currentSection.journey">
+                  <v-list-item-subtitle>
+                    <b
+                      >{{
+                        this.viewingConnection.currentSection.journey.category
+                      }}{{
+                        this.viewingConnection.currentSection.journey.number
+                      }}</b
+                    >
+                    To {{ this.viewingConnection.currentSection.journey.to }}
+                  </v-list-item-subtitle>
+                  <v-list-item-subtitle>
+                    arriving
+                    {{
+                      getRemainingTime(
+                        this.viewingConnection.currentSection.arrival.arrival,
+                        this.viewingConnection.currentSection.arrival.delay,
+                        false
+                      )
+                    }}
+                    at
+                    {{
+                      this.viewingConnection.currentSection.arrival.station.name
+                    }}
+                  </v-list-item-subtitle>
+                  <v-list-item-subtitle
+                    v-if="
+                      this.viewingConnection.currentSection.arrival.platform
+                    "
+                  >
+                    Platform
+                    {{ this.viewingConnection.currentSection.arrival.platform }}
+                  </v-list-item-subtitle>
                 </div>
+                <div v-else>walk you bitch</div>
+              </div>
             </v-list-item-content>
           </v-list-item>
-          <v-list-item v-if="this.viewingConnection.nextSection" >
+          <v-list-item v-if="this.viewingConnection.nextSection">
             <v-list-item-content>
               <v-list-item-title>Up Next</v-list-item-title>
-                <div class="nextSectionInfo">
-                  <div v-if="this.viewingConnection.nextSection.journey">
-                    <v-list-item-subtitle>
-                        <b
-                          >{{ this.viewingConnection.nextSection.journey.category
-                          }}{{ this.viewingConnection.nextSection.journey.number }}</b
-                        >
-                        To {{ this.viewingConnection.nextSection.journey.to }}
-                      </v-list-item-subtitle>
-                      <v-list-item-subtitle>
-                        departing
-                        {{
-                          getRemainingTime(
-                            this.viewingConnection.nextSection.departure.departure,
-                            this.viewingConnection.nextSection.departure.delay,
-                            false
-                          )
-                        }}
-                        from
-                        {{ this.viewingConnection.nextSection.departure.station.name }}
-                      </v-list-item-subtitle>
-                      <v-list-item-subtitle v-if="this.viewingConnection.nextSection.departure.platform">
-                        Platform
-                        {{ this.viewingConnection.nextSection.departure.platform}}
-                      </v-list-item-subtitle>
-                  </div>
-                  <div v-else>walk you bitch</div>
+              <div class="nextSectionInfo">
+                <div v-if="this.viewingConnection.nextSection.journey">
+                  <v-list-item-subtitle>
+                    <b
+                      >{{ this.viewingConnection.nextSection.journey.category
+                      }}{{
+                        this.viewingConnection.nextSection.journey.number
+                      }}</b
+                    >
+                    To {{ this.viewingConnection.nextSection.journey.to }}
+                  </v-list-item-subtitle>
+                  <v-list-item-subtitle>
+                    departing
+                    {{
+                      getRemainingTime(
+                        this.viewingConnection.nextSection.departure.departure,
+                        this.viewingConnection.nextSection.departure.delay,
+                        false
+                      )
+                    }}
+                    from
+                    {{
+                      this.viewingConnection.nextSection.departure.station.name
+                    }}
+                  </v-list-item-subtitle>
+                  <v-list-item-subtitle
+                    v-if="this.viewingConnection.nextSection.departure.platform"
+                  >
+                    Platform
+                    {{ this.viewingConnection.nextSection.departure.platform }}
+                  </v-list-item-subtitle>
                 </div>
+                <div v-else>walk you bitch</div>
+              </div>
             </v-list-item-content>
           </v-list-item>
         </v-list>
         <v-divider></v-divider>
-        <v-list three-line subheader>
-          <v-subheader>General</v-subheader>
-          <v-list-item>
-            <v-list-item-action>
-              <v-checkbox></v-checkbox>
-            </v-list-item-action>
-            <v-list-item-content>
-              <v-list-item-title>Notifications</v-list-item-title>
-              <v-list-item-subtitle
-                >Notify me about updates to apps or games that I
-                downloaded</v-list-item-subtitle
-              >
-            </v-list-item-content>
-          </v-list-item>
-          <v-list-item>
-            <v-list-item-action>
-              <v-checkbox></v-checkbox>
-            </v-list-item-action>
-            <v-list-item-content>
-              <v-list-item-title>Sound</v-list-item-title>
-              <v-list-item-subtitle
-                >Auto-update apps at any time. Data charges may
-                apply</v-list-item-subtitle
-              >
-            </v-list-item-content>
-          </v-list-item>
-          <v-list-item>
-            <v-list-item-action>
-              <v-checkbox></v-checkbox>
-            </v-list-item-action>
-            <v-list-item-content>
-              <v-list-item-title>Auto-add widgets</v-list-item-title>
-              <v-list-item-subtitle
-                >Automatically add home screen widgets</v-list-item-subtitle
-              >
-            </v-list-item-content>
-          </v-list-item>
-        </v-list>
+        <div
+          v-for="section in this.viewingConnection.sections.filter(
+            (section) => section.journey
+          )"
+          :key="section.departure.station.name"
+          class="sectionOverview"
+        >
+          <div
+            class="sectionTitle"
+            :class="{ pulsing: isCurrentSection(section) }"
+          >
+            <div>
+              <v-icon color="black">{{
+                getTransportIcon(section.journey.category)
+              }}</v-icon>
+            </div>
+            <b>{{ section.journey.category }}{{ section.journey.number }}</b>
+            --> {{ section.journey.to }}
+          </div>
+          <v-timeline align-top dense>
+            <v-timeline-item color="grey" small>
+              <v-row class="pt-1">
+                <v-col cols="3">
+                  <strong>
+                    <span
+                      >{{ getProperTime(section.departure.departure) }}<br />
+                      <span
+                        class="delayNum"
+                        v-if="section.departure.delay"
+                        :class="section.departure.delay ? 'blinking' : ''"
+                        >+ {{ section.departure.delay }}</span
+                      ></span
+                    >
+                  </strong>
+                </v-col>
+                <v-col>
+                  <strong>{{ section.departure.station.name }}</strong>
+                  <div v-if="section.departure.platform" class="text-caption">
+                    Platform: {{ section.departure.platform }}
+                  </div>
+                </v-col>
+              </v-row>
+            </v-timeline-item>
+            <v-timeline-item color="grey" small>
+              <v-row class="pt-1">
+                <v-col cols="3">
+                  <strong>
+                    <span
+                      >{{ getProperTime(section.arrival.arrival) }}<br />
+                      <span
+                        class="delayNum"
+                        v-if="section.arrival.delay"
+                        :class="section.arrival.delay ? 'blinking' : ''"
+                        >+ {{ section.arrival.delay }}</span
+                      ></span
+                    ></strong
+                  >
+                </v-col>
+                <v-col>
+                  <strong>{{ section.arrival.station.name }}</strong>
+                  <div v-if="section.arrival.platform" class="text-caption">
+                    Platform: {{ section.arrival.platform }}
+                  </div>
+                </v-col>
+              </v-row>
+            </v-timeline-item>
+          </v-timeline>
+          <v-divider></v-divider>
+        </div>
       </v-card>
     </v-dialog>
   </div>
@@ -274,7 +324,7 @@
 
 <script>
 export default {
-  name: "SavedConnections",
+  name: 'SavedConnections',
   data() {
     return {
       dialog: false,
@@ -308,14 +358,14 @@ export default {
     },
     removeConnection(key) {
       const savedConnections = JSON.parse(
-        localStorage.getItem("savedConnections").split(",")
+        localStorage.getItem('savedConnections').split(',')
       );
       savedConnections.splice(key, 1);
       if (savedConnections.length == 0) {
-        localStorage.removeItem("savedConnections");
+        localStorage.removeItem('savedConnections');
       } else {
         localStorage.setItem(
-          "savedConnections",
+          'savedConnections',
           JSON.stringify(savedConnections)
         );
       }
@@ -326,12 +376,12 @@ export default {
       let hours = date.getHours();
       let minutes = date.getMinutes();
       if (hours < 10) {
-        hours = "0" + hours;
+        hours = '0' + hours;
       }
       if (minutes < 10) {
-        minutes = "0" + minutes;
+        minutes = '0' + minutes;
       }
-      return hours + ":" + minutes;
+      return hours + ':' + minutes;
     },
     getRemainingTime(time, delay, pasttime) {
       const now = new Date();
@@ -347,26 +397,26 @@ export default {
       }
 
       if (hours === 0 && remainingMinutes === 0) {
-        return "now";
+        return 'now';
       }
 
-      let timeString = "";
+      let timeString = '';
 
       if (hours !== 0) {
-        timeString += `${hours} hour${hours === 1 ? "" : "s"}`;
+        timeString += `${hours} hour${hours === 1 ? '' : 's'}`;
       }
 
       if (remainingMinutes !== 0) {
         if (hours !== 0) {
-          timeString += " and";
+          timeString += ' and';
         }
         timeString += ` ${remainingMinutes} minute${
-          remainingMinutes === 1 ? "" : "s"
+          remainingMinutes === 1 ? '' : 's'
         }`;
       }
       if (delay)
         timeString += ` (delayed by ${delay} ${
-          delay === 1 ? "minute" : "minutes"
+          delay === 1 ? 'minute' : 'minutes'
         })`;
 
       return `in ${timeString}`;
@@ -396,17 +446,17 @@ export default {
     },
     getTransportIcon(category) {
       switch (category) {
-        case "IC":
-        case "IR":
-          return "mdi-train";
-        case "S":
-          return "mdi-subway-variant";
-        case "B":
-          return "mdi-bus";
-        case "T":
-          return "mdi-tram";
+        case 'IC':
+        case 'IR':
+          return 'mdi-train';
+        case 'S':
+          return 'mdi-subway-variant';
+        case 'B':
+          return 'mdi-bus';
+        case 'T':
+          return 'mdi-tram';
         default:
-          return "mdi-help-circle";
+          return 'mdi-help-circle';
       }
     },
     hasIssues(connection) {
@@ -423,21 +473,21 @@ export default {
       if (!lineHasIssue) {
         return {
           hasIssue: false,
-          color: "green",
-          text: "No issues",
+          color: 'green',
+          text: 'No issues',
         };
       }
       if (biggestDelay > 3) {
         return {
           hasIssue: true,
-          color: "red",
-          text: "This route contains major delays",
+          color: 'red',
+          text: 'This route contains major delays',
         };
       } else {
         return {
           hasIssue: true,
-          color: "orange",
-          text: "This route contains minor delays",
+          color: 'orange',
+          text: 'This route contains minor delays',
         };
       }
     },
@@ -467,13 +517,15 @@ export default {
         departure.setMinutes(departure.getMinutes() + section.departure.delay);
       }
       if (section.arrival.delay) {
-        arrival.setMinutes(arrival.getMinutes() + parseInt(section.arrival.delay));
+        arrival.setMinutes(
+          arrival.getMinutes() + parseInt(section.arrival.delay)
+        );
       }
       if (departure < now && now < arrival) {
         return true;
       }
       return false;
-    }
+    },
   },
 };
 </script>
@@ -509,7 +561,7 @@ export default {
   margin-bottom: 0.5rem;
 }
 
-.detailLineTimeline{
+.detailLineTimeline {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
@@ -557,7 +609,7 @@ export default {
   padding: 0 16px;
 }
 
-.detailLine{
+.detailLine {
   display: flex;
   flex-direction: row;
   justify-content: space-around;
@@ -571,7 +623,7 @@ export default {
 }
 
 .toolbarTitleSmall::after {
-  content: "\a";
+  content: '\a';
   white-space: pre;
 }
 
@@ -580,7 +632,7 @@ export default {
   height: 100%;
 }
 
-.sections{
+.sections {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -588,7 +640,7 @@ export default {
   width: 100%;
 }
 
-.sectionItem{
+.sectionItem {
   width: 100%;
   border: 1px solid #262626;
 }
@@ -605,9 +657,29 @@ export default {
   align-items: center;
 }
 
-
 .pulsing {
   animation: pulsing 1s infinite;
+}
+
+.sectionTitle {
+  padding: 1rem 2rem;
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.sectionOverview {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.blinking {
+  animation: blinker 1s linear infinite !important;
+}
+
+.delayNum {
+  color: red;
 }
 
 @keyframes pulsing {
@@ -619,6 +691,12 @@ export default {
   }
   100% {
     opacity: 1;
+  }
+}
+
+@keyframes blinker {
+  50% {
+    opacity: 0;
   }
 }
 </style>
