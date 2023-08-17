@@ -132,122 +132,134 @@
             >
           </v-toolbar-title>
         </v-toolbar>
-        <v-list three-line subheader>
-          <v-subheader>Overview</v-subheader>
-          <div class="detailLineOverview">
-            <div class="detailLineTimeline">
-              <span class="departure">{{
-                getProperTime(this.viewingConnection.from.departure)
-              }}</span>
-              <span class="detailLine">
-                <div
-                  class="sections"
-                  v-for="section in this.viewingConnection.sections.filter(
-                    (section) => section.journey
-                  )"
-                  :key="section.departure.station.name"
-                  :class="{ pulsing: isCurrentSection(section) }"
-                >
-                  <div>
-                    <v-icon small color="black" class="typeIcon">{{
-                      getTransportIcon(section.journey.category)
-                    }}</v-icon>
+        <div class="sectionHeader">
+          <v-list three-line subheader>
+            <v-subheader>Overview</v-subheader>
+            <div class="detailLineOverview">
+              <div class="detailLineTimeline">
+                <span class="departure">{{
+                  getProperTime(this.viewingConnection.from.departure)
+                }}</span>
+                <span class="detailLine">
+                  <div
+                    class="sections"
+                    v-for="section in this.viewingConnection.sections.filter(
+                      (section) => section.journey
+                    )"
+                    :key="section.departure.station.name"
+                    :class="{ pulsing: isCurrentSection(section) }"
+                  >
+                    <div>
+                      <v-icon small color="black" class="typeIcon">{{
+                        getTransportIcon(section.journey.category)
+                      }}</v-icon>
+                    </div>
+                    <span class="sectionItem"></span>
+                    <span
+                      >{{ section.journey.category
+                      }}{{ section.journey.number }}</span
+                    >
                   </div>
-                  <span class="sectionItem"></span>
-                  <span
-                    >{{ section.journey.category
-                    }}{{ section.journey.number }}</span
-                  >
-                </div>
-              </span>
-              <span class="arrival">{{
-                getProperTime(this.viewingConnection.to.arrival)
-              }}</span>
+                </span>
+                <span class="arrival">{{
+                  getProperTime(this.viewingConnection.to.arrival)
+                }}</span>
+              </div>
             </div>
-          </div>
-          <v-list-item v-if="this.viewingConnection.currentSection">
-            <v-list-item-content>
-              <v-list-item-title>Current connection</v-list-item-title>
-              <div class="nextSectionInfo">
-                <div v-if="this.viewingConnection.currentSection.journey">
-                  <v-list-item-subtitle>
-                    <b
-                      >{{
-                        this.viewingConnection.currentSection.journey.category
-                      }}{{
-                        this.viewingConnection.currentSection.journey.number
-                      }}</b
+            <v-list-item v-if="this.viewingConnection.currentSection">
+              <v-list-item-content>
+                <v-list-item-title>Current connection</v-list-item-title>
+                <div class="nextSectionInfo">
+                  <div v-if="this.viewingConnection.currentSection.journey">
+                    <v-list-item-subtitle>
+                      <b
+                        >{{
+                          this.viewingConnection.currentSection.journey
+                            .category
+                        }}{{
+                          this.viewingConnection.currentSection.journey.number
+                        }}</b
+                      >
+                      To {{ this.viewingConnection.currentSection.journey.to }}
+                    </v-list-item-subtitle>
+                    <v-list-item-subtitle>
+                      arriving
+                      {{
+                        getRemainingTime(
+                          this.viewingConnection.currentSection.arrival.arrival,
+                          this.viewingConnection.currentSection.arrival.delay,
+                          false
+                        )
+                      }}
+                      at
+                      {{
+                        this.viewingConnection.currentSection.arrival.station
+                          .name
+                      }}
+                    </v-list-item-subtitle>
+                    <v-list-item-subtitle
+                      v-if="
+                        this.viewingConnection.currentSection.arrival.platform
+                      "
                     >
-                    To {{ this.viewingConnection.currentSection.journey.to }}
-                  </v-list-item-subtitle>
-                  <v-list-item-subtitle>
-                    arriving
-                    {{
-                      getRemainingTime(
-                        this.viewingConnection.currentSection.arrival.arrival,
-                        this.viewingConnection.currentSection.arrival.delay,
-                        false
-                      )
-                    }}
-                    at
-                    {{
-                      this.viewingConnection.currentSection.arrival.station.name
-                    }}
-                  </v-list-item-subtitle>
-                  <v-list-item-subtitle
-                    v-if="
-                      this.viewingConnection.currentSection.arrival.platform
-                    "
-                  >
-                    Platform
-                    {{ this.viewingConnection.currentSection.arrival.platform }}
-                  </v-list-item-subtitle>
+                      Platform
+                      {{
+                        this.viewingConnection.currentSection.arrival.platform
+                      }}
+                    </v-list-item-subtitle>
+                  </div>
+                  <div v-else>walk you bitch</div>
                 </div>
-                <div v-else>walk you bitch</div>
-              </div>
-            </v-list-item-content>
-          </v-list-item>
-          <v-list-item v-if="this.viewingConnection.nextSection">
-            <v-list-item-content>
-              <v-list-item-title>Up Next</v-list-item-title>
-              <div class="nextSectionInfo">
-                <div v-if="this.viewingConnection.nextSection.journey">
-                  <v-list-item-subtitle>
-                    <b
-                      >{{ this.viewingConnection.nextSection.journey.category
-                      }}{{
-                        this.viewingConnection.nextSection.journey.number
-                      }}</b
+              </v-list-item-content>
+            </v-list-item>
+            <v-list-item v-if="this.viewingConnection.nextSection">
+              <v-list-item-content>
+                <v-list-item-title>Up Next</v-list-item-title>
+                <div class="nextSectionInfo">
+                  <div v-if="this.viewingConnection.nextSection.journey">
+                    <v-list-item-subtitle>
+                      <b
+                        >{{ this.viewingConnection.nextSection.journey.category
+                        }}{{
+                          this.viewingConnection.nextSection.journey.number
+                        }}</b
+                      >
+                      To {{ this.viewingConnection.nextSection.journey.to }}
+                    </v-list-item-subtitle>
+                    <v-list-item-subtitle>
+                      departing
+                      {{
+                        getRemainingTime(
+                          this.viewingConnection.nextSection.departure
+                            .departure,
+                          this.viewingConnection.nextSection.departure.delay,
+                          false
+                        )
+                      }}
+                      from
+                      {{
+                        this.viewingConnection.nextSection.departure.station
+                          .name
+                      }}
+                    </v-list-item-subtitle>
+                    <v-list-item-subtitle
+                      v-if="
+                        this.viewingConnection.nextSection.departure.platform
+                      "
                     >
-                    To {{ this.viewingConnection.nextSection.journey.to }}
-                  </v-list-item-subtitle>
-                  <v-list-item-subtitle>
-                    departing
-                    {{
-                      getRemainingTime(
-                        this.viewingConnection.nextSection.departure.departure,
-                        this.viewingConnection.nextSection.departure.delay,
-                        false
-                      )
-                    }}
-                    from
-                    {{
-                      this.viewingConnection.nextSection.departure.station.name
-                    }}
-                  </v-list-item-subtitle>
-                  <v-list-item-subtitle
-                    v-if="this.viewingConnection.nextSection.departure.platform"
-                  >
-                    Platform
-                    {{ this.viewingConnection.nextSection.departure.platform }}
-                  </v-list-item-subtitle>
+                      Platform
+                      {{
+                        this.viewingConnection.nextSection.departure.platform
+                      }}
+                    </v-list-item-subtitle>
+                  </div>
+                  <div v-else>walk you bitch</div>
                 </div>
-                <div v-else>walk you bitch</div>
-              </div>
-            </v-list-item-content>
-          </v-list-item>
-        </v-list>
-        <v-divider></v-divider>
+              </v-list-item-content>
+            </v-list-item>
+          </v-list>
+        </div>
+        <v-subheader>Connection Info</v-subheader>
         <div
           v-for="section in this.viewingConnection.sections.filter(
             (section) => section.journey
@@ -255,10 +267,30 @@
           :key="section.departure.station.name"
           class="sectionOverview"
         >
+          <!--
           <div
-            class="sectionTitle"
-            :class="{ pulsing: isCurrentSection(section) }"
+            v-if="isCurrentSection(section)"
+            class="sectionBar"
+            :style="{ background: 'linear-gradient(#00b16a, #ffffff00)' }"
           >
+            <b>Current Connection</b>
+          </div>
+          <div
+            v-else-if="isFutureSection(section)"
+            class="sectionBar"
+            :style="{ background: 'linear-gradient(#168cc7, #ffffff00)' }"
+          >
+            <b>Upcoming Connection</b>
+          </div>
+          <div
+            v-else
+            class="sectionBar"
+            :style="{ background: 'linear-gradient(#666666, #ffffff00)' }"
+          >
+            <b>Previous Connection</b>
+          </div>
+          -->
+          <div class="sectionTitle">
             <div>
               <v-icon color="black">{{
                 getTransportIcon(section.journey.category)
@@ -526,6 +558,18 @@ export default {
       }
       return false;
     },
+    isFutureSection(section) {
+      let now = new Date();
+      if (!section.journey) return false;
+      let departure = new Date(section.departure.departure);
+      if (section.departure.delay) {
+        departure.setMinutes(departure.getMinutes() + section.departure.delay);
+      }
+      if (departure > now) {
+        return true;
+      }
+      return false;
+    },
   },
 };
 </script>
@@ -682,6 +726,18 @@ export default {
   color: red;
 }
 
+.sectionBar {
+  border-top: 2px solid black;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 3rem;
+}
+
+.sectionHeader {
+  box-shadow: 0px 1px 15px 0px #111;
+}
+
 @keyframes pulsing {
   0% {
     opacity: 1;
@@ -697,6 +753,12 @@ export default {
 @keyframes blinker {
   50% {
     opacity: 0;
+  }
+}
+
+@keyframes greenActive {
+  50% {
+    background: #00b16a00;
   }
 }
 </style>
