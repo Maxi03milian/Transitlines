@@ -267,37 +267,37 @@
           :key="section.departure.station.name"
           class="sectionOverview"
         >
-          <!--
-          <div
-            v-if="isCurrentSection(section)"
-            class="sectionBar"
-            :style="{ background: 'linear-gradient(#00b16a, #ffffff00)' }"
-          >
-            <b>Current Connection</b>
-          </div>
-          <div
-            v-else-if="isFutureSection(section)"
-            class="sectionBar"
-            :style="{ background: 'linear-gradient(#168cc7, #ffffff00)' }"
-          >
-            <b>Upcoming Connection</b>
-          </div>
-          <div
-            v-else
-            class="sectionBar"
-            :style="{ background: 'linear-gradient(#666666, #ffffff00)' }"
-          >
-            <b>Previous Connection</b>
-          </div>
-          -->
           <div class="sectionTitle">
-            <div>
-              <v-icon color="black">{{
-                getTransportIcon(section.journey.category)
-              }}</v-icon>
+            <div class="sectionTitleTransport">
+              <div>
+                <v-icon color="black">{{
+                  getTransportIcon(section.journey.category)
+                }}</v-icon>
+              </div>
+              <b>{{ section.journey.category }}{{ section.journey.number }}</b>
+              --> {{ section.journey.to }}
             </div>
-            <b>{{ section.journey.category }}{{ section.journey.number }}</b>
-            --> {{ section.journey.to }}
+            <div
+              v-if="isCurrentSection(section)"
+              class="sectionBar blinking"
+              :style="{ color: '#00b16a' }"
+            >
+              <b>In Transit</b>
+            </div>
+            <div
+              v-else-if="isFutureSection(section)"
+              class="sectionBar"
+              :style="{ color: '#10a0e8' }"
+            >
+              <b>Scheduled</b>
+            </div>
+            <div
+              v-else
+              class="sectionBar"
+              :style="{ color: '#919090' }"
+            >
+              <b>Arrived</b>
+            </div>
           </div>
           <v-timeline align-top dense>
             <v-timeline-item color="grey" small>
@@ -309,7 +309,6 @@
                       <span
                         class="delayNum"
                         v-if="section.departure.delay"
-                        :class="section.departure.delay ? 'blinking' : ''"
                         >+ {{ section.departure.delay }}</span
                       ></span
                     >
@@ -332,7 +331,6 @@
                       <span
                         class="delayNum"
                         v-if="section.arrival.delay"
-                        :class="section.arrival.delay ? 'blinking' : ''"
                         >+ {{ section.arrival.delay }}</span
                       ></span
                     ></strong
@@ -706,10 +704,17 @@ export default {
 }
 
 .sectionTitle {
-  padding: 1rem 2rem;
   display: flex;
-  gap: 0.5rem;
+  padding: 1rem 2rem;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.sectionTitleTransport {
+  display: flex;
+  flex-direction: row;
   align-items: center;
+  gap: 0.5rem;
 }
 
 .sectionOverview {
@@ -727,11 +732,9 @@ export default {
 }
 
 .sectionBar {
-  border-top: 2px solid black;
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 3rem;
 }
 
 .sectionHeader {
@@ -753,12 +756,6 @@ export default {
 @keyframes blinker {
   50% {
     opacity: 0;
-  }
-}
-
-@keyframes greenActive {
-  50% {
-    background: #00b16a00;
   }
 }
 </style>
