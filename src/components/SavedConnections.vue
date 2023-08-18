@@ -735,7 +735,7 @@ export default {
 }
 
 .sectionHeader {
-  box-shadow: 0px 1px 15px 0px #111;
+  box-shadow: 0px 0.5px 15px 0px #111;
 }
 
 @keyframes pulsing {
