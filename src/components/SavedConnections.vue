@@ -116,8 +116,10 @@
         :loading="
           isTransitNow(this.viewingConnection)
             ? hasIssues(this.viewingConnection).color
-            : null
+            : false
         "
+        class="detailDialogHeader"
+        id="connectionDetailDialog"
       >
         <v-toolbar dark :color="'#262626'">
           <v-btn icon dark @click="closeDialog()">
@@ -274,8 +276,10 @@
                   getTransportIcon(section.journey.category)
                 }}</v-icon>
               </div>
+              <div class="sectionTitleText">
               <b>{{ section.journey.category }}{{ section.journey.number }}</b>
               --> {{ section.journey.to }}
+              </div>
             </div>
             <div
               v-if="isCurrentSection(section)"
@@ -291,11 +295,7 @@
             >
               <b>Scheduled</b>
             </div>
-            <div
-              v-else
-              class="sectionBar"
-              :style="{ color: '#919090' }"
-            >
+            <div v-else class="sectionBar" :style="{ color: '#919090' }">
               <b>Arrived</b>
             </div>
           </div>
@@ -306,9 +306,7 @@
                   <strong>
                     <span
                       >{{ getProperTime(section.departure.departure) }}<br />
-                      <span
-                        class="delayNum"
-                        v-if="section.departure.delay"
+                      <span class="delayNum" v-if="section.departure.delay"
                         >+ {{ section.departure.delay }}</span
                       ></span
                     >
@@ -328,9 +326,7 @@
                   <strong>
                     <span
                       >{{ getProperTime(section.arrival.arrival) }}<br />
-                      <span
-                        class="delayNum"
-                        v-if="section.arrival.delay"
+                      <span class="delayNum" v-if="section.arrival.delay"
                         >+ {{ section.arrival.delay }}</span
                       ></span
                     ></strong
@@ -380,13 +376,16 @@ export default {
   },
   methods: {
     openDialog(connection) {
+      document.getElementsByClassName('homeView')[0].style.overflow = 'hidden';
       this.viewingConnection = connection;
       this.dialog = true;
     },
     closeDialog() {
+      document.getElementsByClassName('homeView')[0].style.overflow = 'scroll';
       this.dialog = false;
     },
     removeConnection(key) {
+
       const savedConnections = JSON.parse(
         localStorage.getItem('savedConnections').split(',')
       );
@@ -524,6 +523,7 @@ export default {
     nextSection(sections) {
       let nextSection = null;
       let now = new Date();
+      let stillExists = false;
       sections.forEach((section) => {
         if (!section.journey) return;
         let departure = new Date(section.departure.departure);
@@ -533,9 +533,12 @@ export default {
           );
         }
         if (departure > now) {
+          stillExists = true
           nextSection ? null : (nextSection = section);
         }
       });
+
+      if(!stillExists) return null;
       return nextSection;
     },
     isCurrentSection(section) {
@@ -708,6 +711,7 @@ export default {
   padding: 1rem 2rem;
   flex-direction: row;
   justify-content: space-between;
+  gap: 1rem;
 }
 
 .sectionTitleTransport {
@@ -715,6 +719,9 @@ export default {
   flex-direction: row;
   align-items: center;
   gap: 0.5rem;
+    white-space: nowrap;
+  overflow-x: scroll;
+  overflow-y: hidden;
 }
 
 .sectionOverview {
@@ -739,6 +746,14 @@ export default {
 
 .sectionHeader {
   box-shadow: 0px 0.5px 15px 0px #111;
+}
+
+.detailDialogHeader {
+  overflow-x: hidden !important;
+}
+
+#connectionDetailDialog {
+  padding-bottom: 5rem !important;
 }
 
 @keyframes pulsing {

@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="homeView">
     <Header />
     <div class="content container">
       <div class="title">
