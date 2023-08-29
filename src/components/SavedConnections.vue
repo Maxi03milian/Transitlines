@@ -277,8 +277,10 @@
                 }}</v-icon>
               </div>
               <div class="sectionTitleText">
-              <b>{{ section.journey.category }}{{ section.journey.number }}</b>
-              --> {{ section.journey.to }}
+                <b
+                  >{{ section.journey.category }}{{ section.journey.number }}</b
+                >
+                --> {{ section.journey.to }}
               </div>
             </div>
             <div
@@ -315,7 +317,13 @@
                 <v-col>
                   <strong>{{ section.departure.station.name }}</strong>
                   <div v-if="section.departure.platform" class="text-caption">
-                    Platform: {{ section.departure.platform }}
+                    Platform: {{ section.departure.platform.replace('!', '') }}
+                    <div
+                      v-if="section.departure.platform.includes('!')"
+                      class="delayNum"
+                    >
+                      (Platform changed)
+                    </div>
                   </div>
                 </v-col>
               </v-row>
@@ -335,7 +343,13 @@
                 <v-col>
                   <strong>{{ section.arrival.station.name }}</strong>
                   <div v-if="section.arrival.platform" class="text-caption">
-                    Platform: {{ section.arrival.platform }}
+                    Platform: {{ section.arrival.platform.replace('!', '') }}
+                    <div
+                      v-if="section.arrival.platform.includes('!')"
+                      class="delayNum"
+                    >
+                      (Platform changed)
+                    </div>
                   </div>
                 </v-col>
               </v-row>
@@ -385,7 +399,6 @@ export default {
       this.dialog = false;
     },
     removeConnection(key) {
-
       const savedConnections = JSON.parse(
         localStorage.getItem('savedConnections').split(',')
       );
@@ -533,12 +546,12 @@ export default {
           );
         }
         if (departure > now) {
-          stillExists = true
+          stillExists = true;
           nextSection ? null : (nextSection = section);
         }
       });
 
-      if(!stillExists) return null;
+      if (!stillExists) return null;
       return nextSection;
     },
     isCurrentSection(section) {
@@ -719,7 +732,7 @@ export default {
   flex-direction: row;
   align-items: center;
   gap: 0.5rem;
-    white-space: nowrap;
+  white-space: nowrap;
   overflow-x: scroll;
   overflow-y: hidden;
 }
