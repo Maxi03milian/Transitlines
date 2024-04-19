@@ -1,6 +1,9 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Home from '../views/Home.vue'
+import Stationboard from '../views/Stationboard.vue'
+import Connections from '../views/Connections.vue'
+import Settings from '../views/Settings.vue'
 
 Vue.use(VueRouter)
 
@@ -9,6 +12,21 @@ const routes = [
     path: '/',
     name: 'Home',
     component: Home
+  },
+  {
+    path: '/stationBoard',
+    name: 'StationBoard',
+    component: Stationboard
+  },
+  {
+    path: '/connections',
+    name: 'Connections',
+    component: Connections
+  },
+  {
+    path: '/settings',
+    name: 'Settings',
+    component: Settings
   },
   {
     path: '/about',
