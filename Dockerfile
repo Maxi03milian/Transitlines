@@ -1,20 +1,22 @@
-# Use a Node.js image as the base
-FROM node:alpine
+FROM node:lts-alpine
 
-# Set the working directory in the container
+# install simple http server for serving static content
+RUN npm install -g http-server
+
+# make the 'app' folder the current working directory
 WORKDIR /app
 
-# Copy package.json and package-lock.json
+# copy both 'package.json' and 'package-lock.json' (if available)
 COPY package*.json ./
 
-# Install dependencies
+# install project dependencies
 RUN npm install
 
-# Copy the rest of the Vue app files
+# copy project files and folders to the current working directory (i.e. 'app' folder)
 COPY . .
 
-# Expose the port
-EXPOSE 8080
+# build app for production with minification
+RUN npm run build
 
-# Command to run the Vue app
-CMD ["npm", "run", "serve"]
+EXPOSE 8080
+CMD [ "http-server", "dist" ]
